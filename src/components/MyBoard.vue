@@ -3,74 +3,42 @@
     <v-layout row wrap>
       <v-flex>
         <v-layout row wrap>
-          <v-flex xs12>
-            <h2 class="mainTitle">Выберите тип Вашего оборудования</h2>
-          </v-flex>
-        </v-layout>
-        <v-layout>
-          <v-flex xs6>
+          <v-flex xs4>
             <v-card class="ma-3">
               <v-img :src="require('@/assets/bg_1.png')" aspect-ratio="2.5"></v-img>
               <v-card-title primary-title>
                 <div>
-                  <h3 class="headline mb-0">Распределительное электрооборудование (ГРЩ, ВРУ и т.д.)</h3>
+                  <h3 class="headline mb-0">Шкаф 1</h3>
                 </div>
               </v-card-title>
               <v-card-actions>
-                <v-btn color="info" class="commonBtn">
-                  <router-link to="/switchboard">Рассчитать</router-link>
-                </v-btn>
+                <router-link to="/foo">www.some.link</router-link>
               </v-card-actions>
             </v-card>
           </v-flex>
-          <v-flex xs6>
+          <v-flex xs4>
             <v-card class="ma-3">
               <v-img :src="require('@/assets/bg_2.png')" aspect-ratio="2.5"></v-img>
               <v-card-title primary-title>
                 <div>
-                  <h3
-                    class="headline mb-0"
-                  >Шкафы с устройствами плавного пуска и частотниками (ШПЧ, ШУД, ШУПП и т.д.)</h3>
+                  <h3 class="headline mb-0">Шкаф 2</h3>
                 </div>
               </v-card-title>
               <v-card-actions>
-                <v-btn disabled color="info" class="commonBtn">
-                  <router-link to="/foo">Рассчитать</router-link>
-                </v-btn>
+                <router-link to="/foo">www.some.link</router-link>
               </v-card-actions>
             </v-card>
           </v-flex>
-        </v-layout>
-        <v-layout>
-          <v-flex xs6>
+          <v-flex xs4>
             <v-card class="ma-3">
-              <v-img :src="require('@/assets/bg_4.png')" aspect-ratio="2.5"></v-img>
+              <v-img :src="require('@/assets/bg_2.png')" aspect-ratio="2.5"></v-img>
               <v-card-title primary-title>
                 <div>
-                  <h3
-                    class="headline mb-0"
-                  >Шкафы управления, системы автоматизации (ШУ, ША, РСУ, и т.д.)</h3>
+                  <h3 class="headline mb-0">Шкаф 3</h3>
                 </div>
               </v-card-title>
               <v-card-actions>
-                <v-btn disabled color="info" class="commonBtn">
-                  <router-link to="/foo">Рассчитать</router-link>
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-flex>
-          <v-flex xs6>
-            <v-card class="ma-3">
-              <v-img :src="require('@/assets/bg_3.png')" aspect-ratio="2.5"></v-img>
-              <v-card-title primary-title>
-                <div>
-                  <h3 class="headline mb-0">Устройства компенсации реактивной мощности (УКРМ)</h3>
-                </div>
-              </v-card-title>
-              <v-card-actions>
-                <v-btn disabled color="info" class="commonBtn">
-                  <router-link to="/foo">Рассчитать</router-link>
-                </v-btn>
+                <router-link to="/foo">www.some.link</router-link>
               </v-card-actions>
             </v-card>
           </v-flex>

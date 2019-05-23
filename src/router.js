@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './components/Home.vue'
 import Switchboard from './components/Switchboard.vue'
+import MyBoard from './components/MyBoard.vue'
 
 Vue.use(Router)
 
@@ -18,6 +19,11 @@ export default new Router({
       path: '/switchboard',
       name: 'switchboard',
       component: Switchboard
+    },
+    {
+      path: '/myboard',
+      name: 'myboard',
+      component: MyBoard
     },
   ]
 })
