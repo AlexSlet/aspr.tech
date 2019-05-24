@@ -18,7 +18,7 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-tile v-for="(item, index) in menuItem" :key="index" @click="some()">
+          <v-list-tile v-for="(item, index) in menuItem" :key="index" @click="">
             <v-list-tile-title>{{ item }}</v-list-tile-title>
           </v-list-tile>
         </v-list>
@@ -38,7 +38,7 @@
                 <v-text-field hide-details label="Найти шкаф" prepend-icon="search"></v-text-field>
               </v-flex>
               <v-flex xs4 d-flex align-end>
-                <v-btn outline color="info" class="commonBtn my-0">
+                <v-btn round outline color="info" class="commonBtn my-0">
                   <v-icon>add</v-icon>Создать шкаф
                 </v-btn>
               </v-flex>
