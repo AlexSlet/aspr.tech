@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container>
+    <v-container class="homeContainer">
       <v-layout row wrap>
         <v-flex>
           <v-layout row wrap>
@@ -34,6 +34,34 @@
             </v-flex>
           </v-layout>
           <v-layout row wrap>
+            <v-flex xs4>
+              <v-card class="ma-3">
+                <v-img :src="require('@/assets/bg_3.png')" aspect-ratio="2.5"></v-img>
+                <v-card-title primary-title>
+                  <div>
+                    <h3 class="headline mb-0">Квартирные электрошкафы</h3>
+                  </div>
+                </v-card-title>
+                <v-card-actions>
+                  <v-btn disabled color="info" class="commonBtn">
+                    <router-link to="/foo">Рассчитать</router-link>
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-flex>
+            <v-flex xs4>
+              <v-card class="ma-3">
+                <v-img :src="require('@/assets/bg_3.png')" aspect-ratio="2.5"></v-img>
+                <v-card-title primary-title>
+                    <h3 class="headline mb-0" style="width: 100%;">Типовое ВРУ</h3>
+                </v-card-title>
+                <v-card-actions>
+                  <v-btn disabled color="info" class="commonBtn">
+                    <router-link to="/foo">Рассчитать</router-link>
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-flex>
             <v-flex xs4>
               <v-card class="ma-3">
                 <v-img :src="require('@/assets/bg_1.png')" aspect-ratio="2.5"></v-img>
@@ -89,45 +117,6 @@
                 <v-card-title primary-title>
                   <div>
                     <h3 class="headline mb-0">Устройства компенсации реактивной мощности (УКРМ)</h3>
-                  </div>
-                </v-card-title>
-                <v-card-actions>
-                  <v-btn disabled color="info" class="commonBtn">
-                    <router-link to="/foo">Рассчитать</router-link>
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-flex>
-            <v-flex xs4>
-              <v-card class="ma-3">
-                <v-img :src="require('@/assets/bg_3.png')" aspect-ratio="2.5"></v-img>
-                <v-card-title primary-title>
-                  <div>
-                    <h3 class="headline mb-0">
-                      Квартирные электрошкафы
-                      <br>
-                      <br>
-                    </h3>
-                  </div>
-                </v-card-title>
-                <v-card-actions>
-                  <v-btn disabled color="info" class="commonBtn">
-                    <router-link to="/foo">Рассчитать</router-link>
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-flex>
-            <v-flex xs4>
-              <v-card class="ma-3">
-                <v-img :src="require('@/assets/bg_3.png')" aspect-ratio="2.5"></v-img>
-                <v-card-title primary-title>
-                  <div>
-                    <h3 class="headline mb-0">
-                      Типовое ВРУ
-                      <br>
-                      <br>
-                      <br>
-                    </h3>
                   </div>
                 </v-card-title>
                 <v-card-actions>
@@ -221,5 +210,9 @@ a {
   color: red;
   padding: 5px;
   cursor: pointer;
+}
+.homeContainer .v-card__title {
+  height: 136px;
+  overflow: hidden;
 }
 </style>
