@@ -1,46 +1,105 @@
 <template>
-  <v-container>
-    <v-layout row wrap>
-      <v-flex>
-        <v-layout row wrap>
-          <v-flex xs4 v-for="(item,i) in 3" :key="i">
-            <v-card class="ma-3 myCard">
-              <v-img :src="require('@/assets/bg_1.png')" aspect-ratio="2.5">
-                <div class="cardOverlay">
-                  <v-btn color="info" round>Управлять и редактировать</v-btn>
-                  <div class="fastAction">
-                    <v-menu offset-y>
-                      <template v-slot:activator="{ on }">
-                        <v-btn color="white" round flat dark v-on="on">Быстрые действия <v-icon color="white">keyboard_arrow_down</v-icon></v-btn>
-                      </template>
-                      <v-list>
-                        <v-list-tile v-for="(item, index) in 3" :key="index" @click>
-                          <v-list-tile-title>Some Action</v-list-tile-title>
-                        </v-list-tile>
-                      </v-list>
-                    </v-menu>
-                  </div>
-                </div>
-              </v-img>
-              <v-card-title primary-title>
-                <div>
-                  <h3 class="headline mb-0">Шкаф {{i+1}}</h3>
-                </div>
-              </v-card-title>
-              <v-card-actions>
-                <router-link to="/foo">www.some.link</router-link>
-              </v-card-actions>
-            </v-card>
+  <div>
+    <v-card class="mt-1">
+      <v-container>
+        <v-layout v-if="!user" row wrap>
+          <v-flex xs12>
+            <p>
+              Страница доступна для зарегистрированных пользователей (кроме логина и пароля ничего не требуется) - здесь вы можете сохранять, копить, менять ваши сборки электрошкафов.
+              Так же, для тех кому шаблонных решений для определения шкафа не хватает - открыт доступ для свободной разработки шкафа.
+            </p>
+            <p>
+              Как вариант, вы можете взять спецификацию шкафа в проекте и поэлементно занести детали в шкаф -
+              наша система сама соберет его в шкаф и выдаст Вам цену и спецификацию со всем необходимым (зачастую проектировщики описывают в проекте только основное оборудование, не учитывая множество мелочей, которые так важны, например, шина, реле и т.д.).
+            </p>
           </v-flex>
         </v-layout>
-      </v-flex>
-    </v-layout>
-  </v-container>
+        <v-layout v-else>
+          <v-flex xs6>
+            <h1>Мои шкафы</h1>
+            <p>Выбирете шкаф для редактирования, просмотра и управления</p>
+          </v-flex>
+          <v-flex xs6>
+            <v-layout>
+              <v-flex xs7>
+                <v-text-field hide-details label="Найти шкаф" prepend-icon="search"></v-text-field>
+              </v-flex>
+              <v-flex xs4 d-flex align-end>
+                <v-btn round outline color="info" class="commonBtn my-0">
+                  <v-icon>add</v-icon>Создать шкаф
+                </v-btn>
+              </v-flex>
+              <v-flex xs1>
+                <v-menu hide-details bottom left offset-y>
+                  <template v-slot:activator="{ on }">
+                    <v-btn color="info" class="ma-0 mt-2" small outline fab v-on="on">
+                      <v-icon>more_horiz</v-icon>
+                    </v-btn>
+                  </template>
+
+                  <v-list>
+                    <v-list-tile v-for="(item, i) in 3" :key="i">
+                      <v-list-tile-title>Some text</v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
+                </v-menu>
+              </v-flex>
+            </v-layout>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card>
+    <v-container v-if="user">
+      <v-layout row wrap>
+        <v-flex>
+          <v-layout row wrap>
+            <v-flex xs4 v-for="(item,i) in 3" :key="i">
+              <v-card class="ma-3 myCard">
+                <v-img :src="require('@/assets/bg_1.png')" aspect-ratio="2.5">
+                  <div class="cardOverlay">
+                    <v-btn color="info" round>Управлять и редактировать</v-btn>
+                    <div class="fastAction">
+                      <v-menu offset-y>
+                        <template v-slot:activator="{ on }">
+                          <v-btn color="white" round flat dark v-on="on">
+                            Быстрые действия
+                            <v-icon color="white">keyboard_arrow_down</v-icon>
+                          </v-btn>
+                        </template>
+                        <v-list>
+                          <v-list-tile v-for="(item, index) in 3" :key="index">
+                            <v-list-tile-title>Some Action</v-list-tile-title>
+                          </v-list-tile>
+                        </v-list>
+                      </v-menu>
+                    </div>
+                  </div>
+                </v-img>
+                <v-card-title primary-title>
+                  <div>
+                    <h3 class="headline mb-0">Шкаф {{i+1}}</h3>
+                  </div>
+                </v-card-title>
+                <v-card-actions>
+                  <router-link to="/foo">www.some.link</router-link>
+                </v-card-actions>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </div>
 </template>
 
 <script>
 export default {
-  data: () => ({})
+  data: () => ({}),
+  computed: {
+    user() {
+      return this.$store.getters.getUser;
+    }
+  }
 };
 </script>
 

@@ -5,64 +5,27 @@
         <router-link to="/">ASPR.TECH</router-link>
       </v-toolbar-title>
       <v-toolbar-items class="hidden-sm-and-down ml-4">
-        <v-btn v-if="user" flat :to="'/myboard'">Мои шкафы</v-btn>
-        <v-btn flat>Возможности</v-btn>
-        <v-btn flat>Помощь</v-btn>
+        <v-btn flat :to="'/myboard'">Мои шкафы</v-btn>
+        <v-btn flat :to="'/opportunities'">Возможности</v-btn>
+        <v-btn flat :to="'/help'">Помощь</v-btn>
       </v-toolbar-items>
       <v-spacer></v-spacer>
       <v-menu v-if="user" offset-y>
         <template v-slot:activator="{ on }">
           <v-btn flat v-on="on">
-            <v-icon left>account_circle</v-icon>User Name
+            <v-icon left>account_circle</v-icon>{{userName}}
             <v-icon>keyboard_arrow_down</v-icon>
           </v-btn>
         </template>
         <v-list>
-          <v-list-tile v-for="(item, index) in menuItem" :key="index" @click="">
-            <v-list-tile-title>{{ item }}</v-list-tile-title>
+          <v-list-tile @click="logOut()">
+            <v-list-tile-title>Выйти</v-list-tile-title>
           </v-list-tile>
         </v-list>
       </v-menu>
-      <v-btn flat v-else>Login</v-btn>
+      <v-btn flat v-else :to="'/login'">Login</v-btn>
     </v-toolbar>
-    <v-card v-if="location == '/myboard'" class="mt-1">
-      <v-container>
-        <v-layout>
-          <v-flex xs6>
-            <h1>Мои шкафы</h1>
-            <p>Выбирете шкаф для редактирования, просмотра и управления</p>
-          </v-flex>
-          <v-flex xs6>
-            <v-layout>
-              <v-flex xs7>
-                <v-text-field hide-details label="Найти шкаф" prepend-icon="search"></v-text-field>
-              </v-flex>
-              <v-flex xs4 d-flex align-end>
-                <v-btn round outline color="info" class="commonBtn my-0">
-                  <v-icon>add</v-icon>Создать шкаф
-                </v-btn>
-              </v-flex>
-              <v-flex xs1>
-                <v-menu hide-details bottom left offset-y>
-                  <template v-slot:activator="{ on }">
-                    <v-btn color="info" class="ma-0 mt-2" small outline fab v-on="on">
-                      <v-icon>more_horiz</v-icon>
-                    </v-btn>
-                  </template>
-
-                  <v-list>
-                    <v-list-tile v-for="(item, i) in 3" :key="i" @click>
-                      <v-list-tile-title>Some text</v-list-tile-title>
-                    </v-list-tile>
-                  </v-list>
-                </v-menu>
-              </v-flex>
-            </v-layout>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-card>
-    <v-container fluid>
+    <v-container fluid class="pa-0">
       <router-view/>
     </v-container>
   </v-app>
@@ -73,10 +36,21 @@ export default {
   name: "App",
   data() {
     return {
-      user: true,
-      menuItem: ["Профиль", "Настройки", "Выйти"],
-      location: ""
+      location: "",
     };
+  },
+  computed: {
+    user(){
+      return this.$store.getters.getUser;
+    },
+    userName(){
+      return this.$store.getters.getUserLogin;
+    }
+  },
+  methods: {
+    logOut(){
+      this.$store.commit('clearUser');
+    }
   },
   beforeUpdate() {
     this.location = this.$route.path;

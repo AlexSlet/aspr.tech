@@ -70,6 +70,10 @@ export default new Vuex.Store({
       link: '',
       id: '',
       alarms: []
+    },
+    user: {
+      token: '',
+      login: ''
     }
   },
   mutations: {
@@ -89,6 +93,13 @@ export default new Vuex.Store({
         id: payload.id_order,
         alarms: payload.alarms
       }
+    },
+    setUser(state, payload){
+      state.user = {...payload};
+    },
+    clearUser(state){
+      state.user.login = '';
+      state.user.token = '';
     }
   },
   actions: {
@@ -123,6 +134,12 @@ export default new Vuex.Store({
     },
     getResults: state => {
       return state.results;
+    },
+    getUser: state => {
+      return state.user.token.length > 0;
+    },
+    getUserLogin: state => {
+      return state.user.login;
     }
   }
 
