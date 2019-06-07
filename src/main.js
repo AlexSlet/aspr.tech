@@ -3,6 +3,11 @@ import './plugins/vuetify'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+ 
+Vue.use(VueAxios, axios)
+Vue.axios.defaults.baseURL = 'http://aspr.tech:8080/';
 
 
 Vue.config.productionTip = false

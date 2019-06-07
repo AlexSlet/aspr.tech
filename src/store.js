@@ -96,6 +96,9 @@ export default new Vuex.Store({
     },
     setUser(state, payload){
       state.user = {...payload};
+      Vue.prototype.axios.defaults.headers.common["Authorization"] = `Bearer_${
+        payload.token
+        }`;
     },
     clearUser(state){
       state.user.login = '';
@@ -135,11 +138,11 @@ export default new Vuex.Store({
     getResults: state => {
       return state.results;
     },
-    getUser: state => {
+    getIsUser: state => {
       return state.user.token.length > 0;
     },
-    getUserLogin: state => {
-      return state.user.login;
+    getUser: state => {
+      return state.user;
     }
   }
 

@@ -6,6 +6,7 @@ import MyBoard from './components/MyBoard.vue'
 import Opportunities from './components/Opportunities.vue'
 import Help from './components/Help.vue'
 import Login from './components/Login.vue'
+import SignIn from './components/SignIn.vue'
 
 Vue.use(Router)
 
@@ -42,6 +43,11 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/signin',
+      name: 'signin',
+      component: SignIn
     },
   ]
 })

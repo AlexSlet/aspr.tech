@@ -9,10 +9,10 @@
                 <h3>Логин</h3>
               </v-flex>
               <v-flex xs12>
-                <v-text-field label="Логин" v-model="login" :rules="[rules.required]"></v-text-field>
+                <v-text-field label="Логин" v-model="user.username" :rules="[rules.required]"></v-text-field>
                 <v-text-field
                   label="Пароль"
-                  v-model="password"
+                  v-model="user.password"
                   :append-icon="show1 ? 'visibility' : 'visibility_off'"
                   :rules="[rules.required, rules.min]"
                   :type="show1 ? 'text' : 'password'"
@@ -25,7 +25,7 @@
           </v-card-title>
 
           <v-card-actions>
-            <v-btn flat color="info" @click="logIn()">Войти</v-btn>
+            <v-btn flat color="info" @click="logIn()" :disabled="ckeckFields">Войти</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -36,8 +36,10 @@
 export default {
   data() {
     return {
-      login: "",
-      password: "",
+      user: {
+        username: "",
+        password: ""
+      },
       show1: false,
       rules: {
         required: value => !!value || "Required.",
@@ -48,11 +50,19 @@ export default {
   },
   methods: {
     logIn() {
-        this.$store.commit('setUser', {
-            token: this.login + this.password,
-            login: this.login
-        })
-        this.$router.push('/');
+      this.axios.post("/auth/login", this.user).then(res => {
+        let result = JSON.stringify(res.data);
+        sessionStorage.setItem("user", result);
+        this.$store.commit("setUser", res.data);
+      });
+      this.$router.push("/");
+    }
+  },
+  computed: {
+    ckeckFields() {
+      return this.user.username == "" || this.user.password == ""
+        ? true
+        : false;
     }
   }
 };

@@ -10,10 +10,11 @@
         <v-btn flat :to="'/help'">Помощь</v-btn>
       </v-toolbar-items>
       <v-spacer></v-spacer>
-      <v-menu v-if="user" offset-y>
+      <v-menu v-if="isUser" offset-y>
         <template v-slot:activator="{ on }">
           <v-btn flat v-on="on">
-            <v-icon left>account_circle</v-icon>{{userName}}
+            <v-icon left>account_circle</v-icon>
+            {{user.username}}
             <v-icon>keyboard_arrow_down</v-icon>
           </v-btn>
         </template>
@@ -23,7 +24,10 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-      <v-btn flat v-else :to="'/login'">Login</v-btn>
+      <div v-else>
+        <v-btn flat :to="'/login'">Login</v-btn>
+        <v-btn flat :to="'/signin'">SignIn</v-btn>
+      </div>
     </v-toolbar>
     <v-container fluid class="pa-0">
       <router-view/>
@@ -36,20 +40,25 @@ export default {
   name: "App",
   data() {
     return {
-      location: "",
+      location: ""
     };
   },
   computed: {
-    user(){
-      return this.$store.getters.getUser;
+    isUser() {
+      return this.$store.getters.getIsUser;
     },
-    userName(){
-      return this.$store.getters.getUserLogin;
+    user() {
+      return this.$store.getters.getUser;
     }
   },
   methods: {
-    logOut(){
-      this.$store.commit('clearUser');
+    logOut() {
+      this.$store.commit("clearUser");
+    },
+    checkUser(){
+      if(sessionStorage.user){
+        this.$store.commit('setUser', JSON.parse(sessionStorage.user));
+      }
     }
   },
   beforeUpdate() {
@@ -57,6 +66,9 @@ export default {
   },
   mounted() {
     this.location = this.$route.path;
+  },
+  created(){
+    this.checkUser();
   }
 };
 </script>
