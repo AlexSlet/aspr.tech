@@ -54,8 +54,9 @@ export default {
         let result = JSON.stringify(res.data);
         sessionStorage.setItem("user", result);
         this.$store.commit("setUser", res.data);
+        this.$router.push("/");
       });
-      this.$router.push("/");
+      
     }
   },
   computed: {
