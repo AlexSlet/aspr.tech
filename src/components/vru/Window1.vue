@@ -11,19 +11,58 @@
         <v-select
           height="30"
           hide-details
-          v-model="intrObj.amount_incb"
+          v-model="modalData.amount_incb"
           :items="amount_incb"
           item-text="name"
           item-value="id"
           outline
         ></v-select>
-        <h4>Параметры вводного автомата</h4>
+        <h4 class="mt-2">Способ переключения между вводами</h4>
+        <v-select
+          height="30"
+          hide-details
+          v-model="modalData.insw_switch"
+          :items="insw_switch"
+          item-text="name"
+          item-value="id"
+          outline
+        ></v-select>
+        <h4 class="mt-2">Способ осуществления ввода</h4>
+        <v-radio-group hide-details class="ma-0" v-model="modalData.insw_in">
+          <v-radio label="только автомат" :value="1"></v-radio>
+          <v-radio label="рубильник+автомат" :value="2"></v-radio>
+        </v-radio-group>
+        <v-switch
+          v-model="trasformNeed"
+          :label="`Наличие узла учета на вводе`"
+          class="mt-2"
+          hide-details
+        ></v-switch>
+        <div v-show="modalData.pmeter_need">
+          <h4 class="mt-2">Выберите тип счетчика</h4>
+          <v-select
+            height="30"
+            hide-details
+            item-text="name"
+            item-value="id"
+            v-model="modalData.pmeter_net"
+            :items="pmeter_net"
+            outline
+          ></v-select>
+        </div>
+        <v-switch
+          v-model="trasformAm"
+          :label="`Измерительное оборудование(амперметры,вольтметры)`"
+          class="mt-2"
+          hide-details
+        ></v-switch>
+        <h4 class="mt-2">Параметры вводного автомата</h4>
         <v-layout>
           <v-flex xs6 class="mr-2">
             <v-select
               height="30"
               hide-details
-              v-model="intrObj.incb.incb_current"
+              v-model="modalData.incb.incb_current"
               :items="getCurrent"
               placeholder="Номинальный ток"
               outline
@@ -33,7 +72,7 @@
             <v-select
               height="30"
               hide-details
-              v-model="intrObj.incb.incb_voltage"
+              v-model="modalData.incb.incb_voltage"
               :items="incb_voltage"
               placeholder="Напряжение"
               outline
@@ -45,7 +84,7 @@
             <v-select
               height="30"
               hide-details
-              v-model="intrObj.incb.incb_mnf"
+              v-model="modalData.incb.incb_mnf"
               :items="incb_mnf"
               item-text="name"
               item-value="id"
@@ -61,62 +100,11 @@
               item-text="name"
               item-value="id"
               placeholder="Серия"
-              v-model="intrObj.incb.incb_series"
+              v-model="modalData.incb.incb_series"
               outline
             ></v-select>
           </v-flex>
         </v-layout>
-        <h4 v-if="intrObj.amount_incb > 1" class="mt-2">Тип АВР (автоматический ввод резерва)</h4>
-        <v-select
-          v-if="intrObj.amount_incb > 1"
-          height="30"
-          hide-details
-          v-model="intrObj.air_type"
-          :items="air_type"
-          item-text="name"
-          item-value="id"
-          outline
-        ></v-select>
-        <v-switch
-          v-model="trasformNeed"
-          :label="`Необходимость в счетчиках`"
-          class="mt-2"
-          hide-details
-        ></v-switch>
-        <div v-show="intrObj.pmeter_need">
-          <h4 class="mt-2">Укажите количество счетчиков:</h4>
-          <v-select
-            height="30"
-            hide-details
-            v-model="intrObj.pmeter_amount"
-            :items="pmeter_amount"
-            outline
-          ></v-select>
-          <h4 class="mt-2">Введите параметры счетчика</h4>
-          <v-layout class="mt-2">
-            <v-flex xs6 class="mr-2">
-              <v-select
-                height="30"
-                hide-details
-                v-model="intrObj.pmeter.pmeter_mnf"
-                :items="pmeter_mnf"
-                item-text="name"
-                item-value="id"
-                placeholder="Производитель"
-                outline
-              ></v-select>
-              <span style="color: red;" v-if="message">Заполните все поля!</span>
-            </v-flex>
-            <v-flex xs6>
-              <v-switch
-                v-model="trasformNet"
-                :label="`Необходимость в связи RS-485 для счетчика`"
-                class="mt-0"
-                hide-details
-              ></v-switch>
-            </v-flex>
-          </v-layout>
-        </div>
         <v-btn color="blue darken-4" outline class="mt-3 ml-0" @click="saveData()">Сохранить</v-btn>
       </div>
     </div>
@@ -125,25 +113,30 @@
 <script>
 export default {
   props: {
-    modalData: Object
+    dataFilds: Object
   },
   data: () => ({
-    intrObj: {
+    modalData: {
       amount_incb: 1,
+      insw_switch: 0,
+      insw_in: 1,
+      insw_am: 0,
+      pmeter_need: 0,
+      pmeter_net: "",
       incb: {
         incb_current: 10,
         incb_voltage: 230,
         incb_mnf: 1,
         incb_series: 0
-      },
-      air_type: 0,
-      pmeter_need: 0,
-      pmeter_amount: 1,
-      pmeter: {
-        pmeter_mnf: 81,
-        pmeter_net: 0
       }
     },
+    insw_am: false,
+    insw_switch: [
+      { name: "механический", id: 0 },
+      { name: "автоматический", id: 1 },
+      { name: "реверсивными рубильниками (схема крест)", id: 2 },
+      { name: "АВР на моторных автоматах схема 2в2", id: 3 }
+    ],
     amount_incb: [
       { name: "1 ввод", id: 1 },
       { name: "2 ввод", id: 2 },
@@ -159,22 +152,18 @@ export default {
       { name: "ABB", id: 6 }
     ],
     incb_series: [{ name: "Бюджетная", id: 0 }],
-    air_type: [{ name: "Ручной", id: 1 }, { name: "Автоматический", id: 2 }],
-    pmeter_need: true,
-    pmeter_amount: [1, 2, 3],
-    pmeter_mnf: [
-      { name: "НЕВА", id: 81 },
-      { name: "Меркурий", id: 82 },
-      { name: "Альфа", id: 83 }
+    pmeter_need: false,
+    pmeter_net: [
+      { name: "типовой счетчик для ВРУ", id: 0 },
+      { name: "счетчик с gsm модемом", id: 1 }
     ],
-    pmeter_net: true,
     message: false
   }),
   methods: {
     saveData() {
       this.$emit("saved", {
         name: "insw",
-        data: this.intrObj
+        data: this.modalData
       });
     }
   },
@@ -184,24 +173,24 @@ export default {
     },
     trasformNeed: {
       get: function() {
-        return this.intrObj.pmeter_need;
+        return this.modalData.pmeter_need;
       },
       set: function(val) {
-        return (this.intrObj.pmeter_need = +val);
+        return this.modalData.pmeter_need = +val;
       }
     },
-    trasformNet: {
+    trasformAm: {
       get: function() {
-        return this.intrObj.pmeter_net;
+        return this.modalData.insw_am;
       },
       set: function(val) {
-        return (this.intrObj.pmeter_net = +val);
+        return this.modalData.insw_am = +val;
       }
-    }
+    },
   },
   created() {
-    if (Object.keys(this.modalData).length != 0) {
-      this.intrObj = this.modalData;
+    if (Object.keys(this.dataFilds).length != 0) {
+      this.modalData = this.dataFilds;
     }
   }
 };

@@ -2,7 +2,7 @@
   <div>
     <v-card class="mt-1">
       <v-container>
-        <v-layout v-if="!user" row wrap>
+        <v-layout row wrap v-if="!user">
           <v-flex xs12>
             <p>
               Страница доступна для зарегистрированных пользователей (кроме логина и пароля ничего не требуется) - здесь вы можете сохранять, копить, менять ваши сборки электрошкафов.
@@ -14,7 +14,7 @@
             </p>
           </v-flex>
         </v-layout>
-        <v-layout v-else>
+        <v-layout v-if="user">
           <v-flex xs6>
             <h1>Мои шкафы</h1>
             <p>Выбирете шкаф для редактирования, просмотра и управления</p>
@@ -25,21 +25,15 @@
                 <v-text-field hide-details label="Найти шкаф" prepend-icon="search"></v-text-field>
               </v-flex>
               <v-flex xs4 d-flex align-end>
-                <v-btn round outline color="info" class="commonBtn my-0">
-                  <v-icon>add</v-icon>Создать шкаф
-                </v-btn>
-              </v-flex>
-              <v-flex xs1>
-                <v-menu hide-details bottom left offset-y>
+                <v-menu offset-y>
                   <template v-slot:activator="{ on }">
-                    <v-btn color="info" class="ma-0 mt-2" small outline fab v-on="on">
-                      <v-icon>more_horiz</v-icon>
+                    <v-btn class="ma-0" round outline color="info" v-on="on">
+                      <v-icon>add</v-icon>Создать шкаф
                     </v-btn>
                   </template>
-
                   <v-list>
-                    <v-list-tile v-for="(item, i) in 3" :key="i">
-                      <v-list-tile-title>Some text</v-list-tile-title>
+                    <v-list-tile v-for="(item, index) in boards" :key="index" @click="addBoard(item.link)">
+                      <v-list-tile-title>{{item.name}}</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
                 </v-menu>
@@ -53,7 +47,7 @@
       <v-layout row wrap>
         <v-flex>
           <v-layout row wrap>
-            <v-flex xs4 v-for="(item,i) in 3" :key="i">
+            <v-flex xs4 v-for="(item,i) in 1" :key="i">
               <v-card class="ma-3 myCard">
                 <v-img :src="require('@/assets/bg_1.png')" aspect-ratio="2.5">
                   <div class="cardOverlay">
@@ -94,10 +88,22 @@
 
 <script>
 export default {
-  data: () => ({}),
+  data: () => ({
+    boards: [
+      {name: 'ВРУ', link: '/vru'},
+      {name: 'Квартирные электрошкафы', link: '/flatboard'},
+      {name: 'Распределительное электрооборудование', link: '/switchboard'},
+    ]
+  }),
+  methods: {
+    addBoard(link){
+      this.$router.push(link);
+      
+    }
+  },
   computed: {
     user() {
-      return this.$store.getters.getUser;
+      return this.$store.getters.getIsUser;
     }
   }
 };

@@ -59,29 +59,35 @@
           </v-flex>
           <v-flex xs12>
             <v-switch
-              v-model="trasformBase"
+              v-model="ecs_need_plate"
               :label="`Добавить в комплектацию цоколь?`"
               class="mt-2"
               hide-details
             ></v-switch>
           </v-flex>
+          <v-flex xs6>
+            <h4 class="mt-2">Монтаж вводных кабелей</h4>
+            <v-radio-group hide-details class="ma-0" v-model="ecs.ecs_incab">
+              <v-radio label="Снизу" :value="0"></v-radio>
+              <v-radio label="Сверху" :value="1"></v-radio>
+            </v-radio-group>
+          </v-flex>
+          <v-flex xs6>
+            <h4 class="mt-2">Монтаж отходящих кабелей</h4>
+            <v-radio-group hide-details class="ma-0" v-model="ecs.ecs_outcab">
+              <v-radio label="Снизу" :value="0"></v-radio>
+              <v-radio label="Сверху" :value="1"></v-radio>
+            </v-radio-group>
+          </v-flex>
+          <v-flex xs6>
+            <h4 class="mt-2">Тип ошиновки</h4>
+            <v-radio-group hide-details class="ma-0" v-model="ecs.ecs_busbar">
+              <v-radio label="Медь" :value="0"></v-radio>
+              <v-radio label="Алюминий" :value="1"></v-radio>
+            </v-radio-group>
+          </v-flex>
         </v-layout>
-        <h4 class="mt-2">Количество необходимых корпусов</h4>
-        <v-select
-          height="30"
-          hide-details
-          v-model="ecs.ecs_amount"
-          :items="ecs_amount"
-          item-text="name"
-          item-value="id"
-          outline
-        ></v-select>
-        <v-switch
-          v-model="trasformNeed"
-          :label="`Добавить рубильники для вводных автоматов?`"
-          class="mt-2"
-          hide-details
-        ></v-switch>
+
         <v-btn color="blue darken-4" outline class="mt-3 ml-0" @click="saveData()">Сохранить</v-btn>
       </div>
     </div>
@@ -90,7 +96,7 @@
 <script>
 export default {
   props: {
-    modalData: Object
+    dataFilds: Object
   },
   data: () => ({
     ecs: {
@@ -98,9 +104,9 @@ export default {
       ecs_size: "2000x800x600",
       ecs_ip: 54,
       ecs_need_plate: 1,
-      ecs_need_base: 0,
-      ecs_amount: 1,
-      switch_need: 0
+      ecs_incab: 0,
+      ecs_outcab: 0,
+      ecs_busbar: 0
     },
     ecs_mnf: [
       { name: "ИЕК", id: 3 },
@@ -108,8 +114,8 @@ export default {
       { name: "БЭТ", id: 52 },
       { name: "ФАБЕР", id: 53 }
     ],
-    ecs_ip: [31, 54, 55],
-    ecs_amount: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    ecs_need_plate: true,
+    ecs_ip: [31, 54, 55]
   }),
   methods: {
     saveData() {
@@ -122,27 +128,19 @@ export default {
   computed: {
     getSizes() {
       return this.$store.getters.getSizes(this.ecs.ecs_mnf);
+    }
+  },
+  watch: {
+    ecs_need_base: function(val) {
+      this.ecs.ecs_need_base = +val;
     },
-    trasformBase: {
-      get: function() {
-        return this.ecs.ecs_need_base;
-      },
-      set: function(val) {
-        return (this.ecs.ecs_need_base = +val);
-      }
-    },
-    trasformNeed: {
-      get: function() {
-        return this.ecs.switch_need;
-      },
-      set: function(val) {
-        return (this.ecs.switch_need = +val);
-      }
-    },
+    switch_need: function(val) {
+      this.ecs.switch_need = +val;
+    }
   },
   created() {
-    if (Object.keys(this.modalData).length != 0) {
-      this.ecs = this.modalData;
+    if (Object.keys(this.dataFilds).length != 0) {
+      this.ecs = this.dataFilds;
     }
   }
 };

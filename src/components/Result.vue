@@ -2,7 +2,7 @@
   <div class="myModal">
     <div class="modalOverlay" @click="$emit('closeModal')"></div>
     <div class="modalBox">
-      <h3 class="commonCard">Результат <span @click="$emit('closeModal')" class="closeModal">✕</span></h3>
+      <h3 class="comModalTitle">Результат <span @click="$emit('closeModal')" class="closeModal">✕</span></h3>
       <div class="pa-3">
         <v-layout row wrap>
           <v-flex xs4 d-flex justify-center align-center>
@@ -22,7 +22,7 @@
               :disabled="loading"
               color="blue-grey"
               class="white--text ma-0"
-              :href="'http://aspr.tech:8080/loadfiles?fileid='+ resData.id"
+              :href="'http://aspr.tech:8080/math/loadfiles?id=' + resData.id"
               target="blank"
             >
               Загрузить файл
@@ -74,6 +74,9 @@
 </template>
 <script>
 export default {
+  props: {
+    resData: Object
+  },
   data: () => ({
     price: "10000000",
     loader: null,
@@ -93,11 +96,11 @@ export default {
       this.$store.dispatch("sendDataChanged", this.mnf);
     }
   },
-  computed: {
-    resData() {
-      return this.$store.getters.getResults;
-    }
-  },
+  // computed: {
+  //   resData() {
+  //     return this.$store.getters.getResults;
+  //   }
+  // },
   watch: {
     loader() {
       const l = this.loader;

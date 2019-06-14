@@ -9,6 +9,36 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    current: [
+      10,
+      16,
+      20,
+      25,
+      32,
+      40,
+      50,
+      63,
+      80,
+      100,
+      125,
+      160,
+      200,
+      250,
+      320,
+      400,
+      500,
+      630,
+      800,
+      1000,
+      1250,
+      1600,
+      2000,
+      2500,
+      3200,
+      4000,
+      5000,
+      6300
+    ],
     sizes: {
       '3': [
         { name: "1800x450x450" },
@@ -60,40 +90,41 @@ export default new Vuex.Store({
         { name: "2000x800x450" },
       ]
     },
-    data: {
-      insw: {},
-      list_outcb: [],
-      comecs: {}
-    },
-    results: {
-      price: '',
-      link: '',
-      id: '',
-      alarms: []
-    },
+    // data: {
+    //   insw: {},
+    //   list_outcb: [],
+    //   comecs: {}
+    // },
+    // results: {
+    //   price: '',
+    //   link: '',
+    //   id: '',
+    //   alarms: []
+    // },
     user: {
       token: '',
-      login: ''
+      login: '',
+      id: ''
     }
   },
   mutations: {
-    setData(state, payload) {
-      Vue.set(state.data, payload.name, payload.data);
-    },
+    // setData(state, payload) {
+    //   Vue.set(state.data, payload.name, payload.data);
+    // },
     setMnf(state, payload){
       state.data.insw.incb.incb_mnf = payload;
       state.data.list_outcb.map(item => {
         item.outcb_mnf = payload;
       })
     },
-    setResults(state, payload){
-      state.results = {
-        price: payload.price,
-        link: payload.link_specification,
-        id: payload.id_order,
-        alarms: payload.alarms
-      }
-    },
+    // setResults(state, payload){
+    //   state.results = {
+    //     price: payload.price,
+    //     link: payload.link_specification,
+    //     id: payload.id_order,
+    //     alarms: payload.alarms
+    //   }
+    // },
     setUser(state, payload){
       state.user = {...payload};
       Vue.prototype.axios.defaults.headers.common["Authorization"] = `Bearer_${
@@ -101,45 +132,48 @@ export default new Vuex.Store({
         }`;
     },
     clearUser(state){
-      state.user.login = '';
-      state.user.token = '';
+      state.user = {}
     }
   },
   actions: {
-    sendData({ state, commit }) {
-      let params = new URLSearchParams();
-      params.append('data', JSON.stringify(state.data));
-      return axios.post('http://188.227.120.13:8080/jsonexchange', params, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }).then(res => {
-        commit('setResults', res.data);
-      })
-    },
-    sendDataChanged({commit, dispatch}, payload){
-      commit('setMnf', payload);
-      return dispatch('sendData');
-    },
+    // sendData({ state, commit }) {
+    //   // let params = new URLSearchParams();
+    //   // params.append('data', JSON.stringify(state.data));
+    //   return axios.post('math/switchboard',state.data, {
+    //     headers: {
+    //       'Content-Type': 'text/plain'
+    //     }
+    //   }).then(res => {
+    //     commit('setResults', res.data);
+    //   })
+    // },
+    // sendDataChanged({commit, dispatch}, payload){
+    //   commit('setMnf', payload);
+    //   return dispatch('sendData');
+    // },
   },
   getters: {
     getSizes: state => id => {
       return state.sizes[id];
     },
-    getInsw: state => {
-      return state.data.insw;
+    getCurrent: state => {
+      return state.current;
     },
-    getListOut: state => {
-      return state.data.list_outcb;
-    },
-    getEcs: state => {
-      return state.data.comecs;
-    },
-    getResults: state => {
-      return state.results;
-    },
+    // getInsw: state => {
+    //   return state.data.insw;
+    // },
+    // getListOut: state => {
+    //   return state.data.list_outcb;
+    // },
+    // getEcs: state => {
+    //   return state.data.comecs;
+    // },
+    // getResults: state => {
+    //   return state.results;
+    // },
     getIsUser: state => {
-      return state.user.token.length > 0;
+      //return state.user.token.length > 0;
+      return true;
     },
     getUser: state => {
       return state.user;

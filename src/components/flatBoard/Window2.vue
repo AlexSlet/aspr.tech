@@ -7,11 +7,11 @@
         <span @click="$emit('closeModal')" class="closeModal">✕</span>
       </h3>
       <div class="pa-3">
-        <div v-for="(item, i) in list_outcb" :key="i">
+        <div v-for="(item, i) in list_incb" :key="i">
           <h4 class="mb-2 mt-2">
             Параметры отходящего автомата {{i+1}}
             <span
-              v-if="list_outcb.length > 1"
+              v-if="list_incb.length > 1"
               class="ml-3 removeItem"
               @click="removeIncb(i)"
             >✕</span>
@@ -22,7 +22,7 @@
               <v-select
                 height="30"
                 hide-details
-                v-model="list_outcb[i].outcb_current"
+                v-model="list_incb[i].outcb_current"
                 :items="getCurrent"
                 placeholder="Номинальный ток"
                 outline
@@ -74,12 +74,13 @@
   </div>
 </template>
 <script>
+import { log } from "util";
 export default {
   props: {
-    modalData: Array
+    dataFilds: Array
   },
   data: () => ({
-    list_outcb: [
+    list_incb: [
       {
         outcb_current: 10,
         outcb_voltage: 230,
@@ -99,14 +100,9 @@ export default {
     outcb_series: [{ name: "Бюджетная", id: 0 }],
     message: false
   }),
-  computed: {
-    getCurrent() {
-      return this.$store.getters.getCurrent;
-    }
-  },
   methods: {
     addIncb() {
-      this.list_outcb.push({
+      this.list_incb.push({
         outcb_current: 10,
         outcb_voltage: 230,
         outcb_mnf: 1,
@@ -114,18 +110,23 @@ export default {
       });
     },
     removeIncb(index) {
-      this.list_outcb.splice(index, 1);
+      this.list_incb.splice(index, 1);
     },
     saveData() {
       this.$emit("saved", {
-        name: "list_outcb",
-        data: this.list_outcb
-      });
+          name: "list_outcb",
+          data: this.list_incb
+        });
+    },
+  },
+  computed: {
+    getCurrent() {
+      return this.$store.getters.getCurrent;
     }
   },
   created() {
-    if (this.modalData.length != 0) {
-      this.list_outcb = this.modalData;
+    if (this.dataFilds.length != 0) {
+      this.list_incb = this.dataFilds;
     }
   }
 };
