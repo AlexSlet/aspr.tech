@@ -93,7 +93,7 @@ export default {
   }),
   methods: {
     recount() {
-      this.$store.dispatch("sendDataChanged", this.mnf);
+      this.$emit('recount', this.mnf);
     }
   },
   // computed: {
@@ -114,10 +114,6 @@ export default {
 };
 </script>
 <style scoped>
-h3 {
-  color: #fff;
-  padding: 10px;
-}
 .remarks {
   color: red;
 }

@@ -89,7 +89,7 @@
         @closeModal="comecs = !comecs"
         @saved="setSaved($event)"
       ></Clarifications>
-      <Result :resData="resData" v-if="resultOpen" @closeModal="resultOpen = !resultOpen"></Result>
+      <Result :resData="resData" v-if="resultOpen" @recount="recount($event)" @closeModal="resultOpen = !resultOpen"></Result>
     </v-layout>
     <write-name v-if="modalName && myBoard" @sendName="saveName($event)"></write-name>
   </v-container>
@@ -138,7 +138,7 @@ export default {
       this.forSend[e.name] = e.data;
     },
     calc() {
-      this.axios
+      return this.axios
         .post("math/switchboard", this.forSend, {
           headers: {
             "Content-Type": "text/plain"
@@ -146,8 +146,7 @@ export default {
         })
         .then(res => {
           this.resData = { ...res.data };
-          this.resultOpen = !this.resultOpen;
-          console.log(res);
+          this.resultOpen = true;
         });
     },
     saveBoard() {
@@ -164,6 +163,13 @@ export default {
         this.modalName = true;
         this.forSend.id_user = this.user.id;
       }
+    },
+    recount(mnf){
+      this.forSend.insw.incb.incb_mnf = mnf;
+      this.forSend.list_outcb.map(item => {
+        item.outcb_mnf = mnf;
+      })
+      this.calc();
     }
   },
   computed: {

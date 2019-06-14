@@ -83,7 +83,7 @@
         @closeModal="comecs = !comecs"
         @saved="setSaved($event)"
       ></window3>
-      <Result :resData="resData" v-if="resultOpen" @closeModal="resultOpen = !resultOpen"></Result>
+      <Result :resData="resData" v-if="resultOpen" @recount="recount($event)" @closeModal="resultOpen = !resultOpen"></Result>
     </v-layout>
     <write-name v-if="modalName && myBoard" @sendName="saveName($event)"></write-name>
   </v-container>
@@ -158,6 +158,13 @@ export default {
         this.modalName = true;
         this.forSend.id_user = this.user.id;
       }
+    },
+    recount(mnf){
+      this.forSend.insw.incb.incb_mnf = mnf;
+      this.forSend.list_outcb.map(item => {
+        item.outcb_mnf = mnf;
+      })
+      this.calc();
     }
   },
   computed: {

@@ -103,8 +103,7 @@ export default new Vuex.Store({
     // },
     user: {
       token: '',
-      login: '',
-      id: ''
+      login: ''
     }
   },
   mutations: {
@@ -132,7 +131,9 @@ export default new Vuex.Store({
         }`;
     },
     clearUser(state){
-      state.user = {}
+      state.user.login = '';
+      state.user.token = '';
+      sessionStorage.removeItem('user');
     }
   },
   actions: {
@@ -172,8 +173,7 @@ export default new Vuex.Store({
     //   return state.results;
     // },
     getIsUser: state => {
-      //return state.user.token.length > 0;
-      return true;
+      return state.user.token.length > 0;
     },
     getUser: state => {
       return state.user;
