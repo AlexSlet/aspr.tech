@@ -118,7 +118,7 @@ export default {
         })
         .then(res => {
           this.resData = { ...res.data };
-          this.resultOpen = !this.resultOpen;
+          this.resultOpen = true;
           console.log(res);
         });
     },

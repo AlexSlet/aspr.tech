@@ -122,7 +122,7 @@ export default {
       insw_in: 1,
       insw_am: 0,
       pmeter_need: 0,
-      pmeter_net: "",
+      pmeter_net: 0,
       incb: {
         incb_current: 10,
         incb_voltage: 230,

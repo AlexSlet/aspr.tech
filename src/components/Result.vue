@@ -2,14 +2,17 @@
   <div class="myModal">
     <div class="modalOverlay" @click="$emit('closeModal')"></div>
     <div class="modalBox">
-      <h3 class="comModalTitle">Результат <span @click="$emit('closeModal')" class="closeModal">✕</span></h3>
+      <h3 class="comModalTitle">
+        Результат
+        <span @click="$emit('closeModal')" class="closeModal">✕</span>
+      </h3>
       <div class="pa-3">
         <v-layout row wrap>
           <v-flex xs4 d-flex justify-center align-center>
             <h4>Цена</h4>
           </v-flex>
           <v-flex xs8>
-            <v-text-field hide-details readonly v-model="resData.price" solo></v-text-field>
+            <div>{{resData.price | priceTransform}}</div>
           </v-flex>
         </v-layout>
         <v-layout row wrap class="mt-3">
@@ -74,11 +77,17 @@
 </template>
 <script>
 export default {
+  filters: {
+    priceTransform: function(value) {
+      if (!value) return "";
+      
+      return value.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' });
+    }
+  },
   props: {
     resData: Object
   },
   data: () => ({
-    price: "10000000",
     loader: null,
     loading: false,
     mnf: "",
@@ -93,7 +102,7 @@ export default {
   }),
   methods: {
     recount() {
-      this.$emit('recount', this.mnf);
+      this.$emit("recount", this.mnf);
     }
   },
   // computed: {

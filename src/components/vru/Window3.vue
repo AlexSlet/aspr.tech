@@ -59,7 +59,7 @@
           </v-flex>
           <v-flex xs12>
             <v-switch
-              v-model="ecs_need_plate"
+              v-model="trasformBase"
               :label="`Добавить в комплектацию цоколь?`"
               class="mt-2"
               hide-details
@@ -106,7 +106,8 @@ export default {
       ecs_need_plate: 1,
       ecs_incab: 0,
       ecs_outcab: 0,
-      ecs_busbar: 0
+      ecs_busbar: 0,
+      ecs_need_base: 0
     },
     ecs_mnf: [
       { name: "ИЕК", id: 3 },
@@ -128,15 +129,15 @@ export default {
   computed: {
     getSizes() {
       return this.$store.getters.getSizes(this.ecs.ecs_mnf);
-    }
-  },
-  watch: {
-    ecs_need_base: function(val) {
-      this.ecs.ecs_need_base = +val;
     },
-    switch_need: function(val) {
-      this.ecs.switch_need = +val;
-    }
+    trasformBase: {
+      get: function() {
+        return this.ecs.ecs_need_base;
+      },
+      set: function(val) {
+        return (this.intrObj.ecs_need_base = +val);
+      }
+    },
   },
   created() {
     if (Object.keys(this.dataFilds).length != 0) {
