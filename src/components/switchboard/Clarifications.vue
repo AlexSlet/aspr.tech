@@ -8,10 +8,17 @@
       </h3>
       <div class="pa-3">
         <h4>Параметры корпуса шкафа</h4>
+        <v-switch
+          v-model="recBoard"
+          :label="`Ипользовать рекомендованный корпус?`"
+          class="my-2"
+          hide-details
+        ></v-switch>
         <v-layout>
           <v-flex xs6 class="mr-2">
             <span>Степень защиты</span>
             <v-select
+              :disabled="recBoard"
               height="30"
               hide-details
               v-model="ecs.ecs_ip"
@@ -23,6 +30,7 @@
           <v-flex xs6>
             <span>Размер корпуса</span>
             <v-select
+              :disabled="recBoard"
               height="30"
               hide-details
               v-model="ecs.ecs_size"
@@ -38,6 +46,7 @@
           <v-flex xs12>
             <span>Производитель</span>
             <v-select
+              :disabled="recBoard"
               height="30"
               hide-details
               v-model="ecs.ecs_mnf"
@@ -93,8 +102,9 @@ export default {
     modalData: Object
   },
   data: () => ({
+    recBoard: true,
     ecs: {
-      ecs_mnf: 3,
+      ecs_mnf: 52,
       ecs_size: "2000x800x600",
       ecs_ip: 54,
       ecs_need_plate: 1,
@@ -138,7 +148,7 @@ export default {
       set: function(val) {
         return (this.ecs.switch_need = +val);
       }
-    },
+    }
   },
   created() {
     if (Object.keys(this.modalData).length != 0) {

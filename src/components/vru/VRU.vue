@@ -61,7 +61,13 @@
         <v-layout row wrap>
           <v-flex xs12 d-flex class="pa-2">
             <v-btn color="success" :disabled="ifDisable" dark large @click="calc()">Рассчитать</v-btn>
-            <v-btn v-if="isUser && myBoard" color="info" :disabled="ifDisable" large @click="saveBoard()">Сохранить</v-btn>
+            <v-btn
+              v-if="isUser && myBoard"
+              color="info"
+              :disabled="ifDisable"
+              large
+              @click="sendBoard()"
+            >Сохранить</v-btn>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -83,7 +89,12 @@
         @closeModal="comecs = !comecs"
         @saved="setSaved($event)"
       ></window3>
-      <Result :resData="resData" v-if="resultOpen" @recount="recount($event)" @closeModal="resultOpen = !resultOpen"></Result>
+      <Result
+        :resData="resData"
+        v-if="resultOpen"
+        @recount="recount($event)"
+        @closeModal="resultOpen = !resultOpen"
+      ></Result>
     </v-layout>
     <write-name v-if="modalName && myBoard" @sendName="saveName($event)"></write-name>
   </v-container>
@@ -115,9 +126,9 @@ export default {
       comecs: false,
       list_outcb: false
     },
+    id_board: -1,
     resData: {},
     forSend: {
-      id_user: 0,
       type: 2,
       name: "noname",
       insw: {},
@@ -144,10 +155,50 @@ export default {
           console.log(res);
         });
     },
+    sendBoard() {
+      if (this.id_board != -1) {
+        this.updateBoard();
+      } else {
+        this.saveBoard();
+      }
+    },
     saveBoard() {
-      this.axios.post("users/saveassamblies", this.forSend).then(res => {
-        console.log(res);
-      });
+      this.axios
+        .post(
+          "users/saveasmbl",
+          {
+            id_user: this.user.id,
+            save_json: { ...this.forSend }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
+          }
+        )
+        .then(res => {
+          this.id_board = res.data;
+          this.$router.push("/myboard");
+        });
+    },
+    updateBoard() {
+      this.axios
+        .post(
+          "users/updasmbl",
+          {
+            id: this.id_board,
+            id_user: this.user.id,
+            save_json: { ...this.forSend }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
+          }
+        )
+        .then(res => {
+          this.$router.push("/myboard");
+        });
     },
     saveName(name) {
       this.forSend.name = name;
@@ -159,11 +210,11 @@ export default {
         this.forSend.id_user = this.user.id;
       }
     },
-    recount(mnf){
+    recount(mnf) {
       this.forSend.insw.incb.incb_mnf = mnf;
       this.forSend.list_outcb.map(item => {
         item.outcb_mnf = mnf;
-      })
+      });
       this.calc();
     }
   },
@@ -188,7 +239,7 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      if(from.path == '/myboard'){
+      if (from.path == "/myboard") {
         vm.myBoard = true;
       }
     });

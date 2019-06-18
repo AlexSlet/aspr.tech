@@ -32,7 +32,11 @@
                     </v-btn>
                   </template>
                   <v-list>
-                    <v-list-tile v-for="(item, index) in boards" :key="index" @click="addBoard(item.link)">
+                    <v-list-tile
+                      v-for="(item, index) in addBoards"
+                      :key="index"
+                      @click="addBoard(item.link)"
+                    >
                       <v-list-tile-title>{{item.name}}</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
@@ -47,11 +51,11 @@
       <v-layout row wrap>
         <v-flex>
           <v-layout row wrap>
-            <v-flex xs4 v-for="(item,i) in 1" :key="i">
+            <v-flex xs4 v-for="(item,i) in boards" :key="i">
               <v-card class="ma-3 myCard">
                 <v-img :src="require('@/assets/bg_1.png')" aspect-ratio="2.5">
                   <div class="cardOverlay">
-                    <v-btn color="info" round>Управлять и редактировать</v-btn>
+                    <v-btn color="info" round @click="editBoard(item)">Управлять и редактировать</v-btn>
                     <div class="fastAction">
                       <v-menu offset-y>
                         <template v-slot:activator="{ on }">
@@ -61,8 +65,11 @@
                           </v-btn>
                         </template>
                         <v-list>
-                          <v-list-tile v-for="(item, index) in 3" :key="index">
-                            <v-list-tile-title>Some Action</v-list-tile-title>
+                          <v-list-tile @click="downloadSpec(item)">
+                            <v-list-tile-title>Скачать спецификацию</v-list-tile-title>
+                          </v-list-tile>
+                          <v-list-tile @click="deleteBoard(item.id)">
+                            <v-list-tile-title>Удалить</v-list-tile-title>
                           </v-list-tile>
                         </v-list>
                       </v-menu>
@@ -71,11 +78,11 @@
                 </v-img>
                 <v-card-title primary-title>
                   <div>
-                    <h3 class="headline mb-0">Шкаф {{i+1}}</h3>
+                    <h3 class="headline mb-0">{{item.name}}</h3>
                   </div>
                 </v-card-title>
                 <v-card-actions>
-                  <router-link to="/foo">www.some.link</router-link>
+                  <p>{{types[item.type - 1]}}</p>
                 </v-card-actions>
               </v-card>
             </v-flex>
@@ -88,23 +95,84 @@
 
 <script>
 export default {
+  name: "MyBoards",
   data: () => ({
-    boards: [
-      {name: 'ВРУ', link: '/vru'},
-      {name: 'Квартирные электрошкафы', link: '/flatboard'},
-      {name: 'Распределительное электрооборудование', link: '/switchboard'},
+    addBoards: [
+      { name: "ВРУ", link: "/vru" },
+      { name: "Квартирные электрошкафы", link: "/flatboard" },
+      { name: "Распределительное электрооборудование", link: "/switchboard" }
+    ],
+    boards: [],
+    types: [
+      "Распределительное электрооборудование",
+      "Типовое ВРУ",
+      "Квартирные электрошкафы"
     ]
   }),
   methods: {
-    addBoard(link){
+    addBoard(link) {
       this.$router.push(link);
-      
+    },
+    getMyBoards() {
+      this.axios.get("users/getasmbl?id=" + this.userData.id).then(res => {
+        this.boards = [...res.data];
+      });
+    },
+    editBoard(item) {
+      this.$store.commit("");
+    },
+    deleteBoard(id) {
+      this.axios.post("users/delasmbl?id=" + id).then(res => {
+        this.getMyBoards();
+      });
+    },
+    downloadSpec(item) {
+      let url = this.checkUrl(item.type);
+      this.axios
+        .post(
+          url,
+          {
+            id: item.id,
+            id_user: -1,
+            save_json: { ...item }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
+          }
+        )
+        .then(res => {
+          window.open('http://aspr.tech:8080/math/loadfiles?id='+ res.data.id, 'new_window');
+          
+        });
+    },
+    checkUrl(type){
+      let url;
+      switch (type) {
+        case 1:
+          url = "math/switchboard";
+          break;
+        case 2:
+          url = "math/switchboardv1";
+          break;
+        case 3:
+          url = "users/saveasmbl";
+          break;
+      };
+      return url;
     }
   },
   computed: {
     user() {
       return this.$store.getters.getIsUser;
+    },
+    userData() {
+      return this.$store.getters.getUser;
     }
+  },
+  created() {
+    this.getMyBoards();
   }
 };
 </script>

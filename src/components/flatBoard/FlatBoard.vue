@@ -48,7 +48,7 @@
               color="info"
               :disabled="ifDisable"
               large
-              @click="saveBoard()"
+              @click="sendBoard()"
             >Сохранить</v-btn>
           </v-flex>
         </v-layout>
@@ -65,7 +65,12 @@
         @closeModal="list_outcb = !list_outcb"
         @saved="setSaved($event)"
       ></window2>
-      <Result :resData="resData" v-if="resultOpen" @recount="recount($event)" @closeModal="resultOpen = !resultOpen"></Result>
+      <Result
+        :resData="resData"
+        v-if="resultOpen"
+        @recount="recount($event)"
+        @closeModal="resultOpen = !resultOpen"
+      ></Result>
     </v-layout>
     <write-name v-if="modalName && myBoard" @sendName="saveName($event)"></write-name>
   </v-container>
@@ -75,7 +80,7 @@ import Window1 from "@/components/flatBoard/Window1";
 import Window2 from "@/components/flatBoard/Window2";
 import Result from "@/components/Result";
 import WriteName from "@/components/WriteName";
-import { log } from 'util';
+import { log } from "util";
 export default {
   name: "FlatBoard",
   components: {
@@ -96,12 +101,12 @@ export default {
     },
     resData: {},
     forSend: {
-      id_user: 0,
       type: 3,
       name: "noname",
       insw: {},
       list_outcb: []
-    }
+    },
+    id_board: -1,
   }),
   methods: {
     setSaved(e) {
@@ -122,10 +127,50 @@ export default {
           console.log(res);
         });
     },
+    sendBoard() {
+      if (this.id_board != -1) {
+        this.updateBoard();
+      } else {
+        this.saveBoard();
+      }
+    },
     saveBoard() {
-      this.axios.post("users/saveassamblies", this.forSend).then(res => {
-        console.log(res);
-      });
+      this.axios
+        .post(
+          "users/saveasmbl",
+          {
+            id_user: this.user.id,
+            save_json: { ...this.forSend }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
+          }
+        )
+        .then(res => {
+          this.id_board = res.data;
+          this.$router.push("/myboard");
+        });
+    },
+    updateBoard() {
+      this.axios
+        .post(
+          "users/updasmbl",
+          {
+            id: this.id_board,
+            id_user: this.user.id,
+            save_json: { ...this.forSend }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
+          }
+        )
+        .then(res => {
+          this.$router.push("/myboard");
+        });
     },
     saveName(name) {
       this.forSend.name = name;
@@ -137,11 +182,11 @@ export default {
         this.forSend.id_user = this.user.id;
       }
     },
-    recount(mnf){
+    recount(mnf) {
       this.forSend.insw.incb.incb_mnf = mnf;
       this.forSend.list_outcb.map(item => {
         item.outcb_mnf = mnf;
-      })
+      });
       this.calc();
     }
   },
@@ -166,7 +211,7 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      if(from.path == '/myboard'){
+      if (from.path == "/myboard") {
         vm.myBoard = true;
       }
     });

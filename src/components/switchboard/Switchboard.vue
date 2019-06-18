@@ -62,11 +62,11 @@
           <v-flex xs12 d-flex class="pa-2">
             <v-btn color="success" :disabled="ifDisable" large @click="calc()">Рассчитать</v-btn>
             <v-btn
-              v-if="isUser && myBoard"
+              v-if="isUser"
               color="info"
               :disabled="ifDisable"
               large
-              @click="saveBoard()"
+              @click="sendBoard()"
             >Сохранить</v-btn>
           </v-flex>
         </v-layout>
@@ -89,9 +89,14 @@
         @closeModal="comecs = !comecs"
         @saved="setSaved($event)"
       ></Clarifications>
-      <Result :resData="resData" v-if="resultOpen" @recount="recount($event)" @closeModal="resultOpen = !resultOpen"></Result>
+      <Result
+        :resData="resData"
+        v-if="resultOpen"
+        @recount="recount($event)"
+        @closeModal="resultOpen = !resultOpen"
+      ></Result>
     </v-layout>
-    <write-name v-if="modalName && myBoard" @sendName="saveName($event)"></write-name>
+    <write-name v-if="modalName" @sendName="saveName($event)"></write-name>
   </v-container>
 </template>
 <script>
@@ -115,7 +120,6 @@ export default {
     comecs: false,
     resultOpen: false,
     modalName: false,
-    myBoard: false,
     isSaved: {
       insw: false,
       list_outcb: false,
@@ -123,13 +127,14 @@ export default {
     },
     resData: {},
     forSend: {
-      id_user: 0,
       type: 1,
       name: "noname",
       insw: {},
       list_outcb: [],
       comecs: {}
-    }
+    },
+    id_board: -1,
+    user_id: -1
   }),
   methods: {
     setSaved(e) {
@@ -139,20 +144,69 @@ export default {
     },
     calc() {
       return this.axios
-        .post("math/switchboard", this.forSend, {
-          headers: {
-            "Content-Type": "text/plain"
+        .post(
+          "math/switchboard",
+          {
+            id: this.id_board,
+            id_user: this.user_id,
+            save_json: { ...this.forSend }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
           }
-        })
+        )
         .then(res => {
+          this.id_board = res.data.id;
           this.resData = { ...res.data };
           this.resultOpen = true;
         });
     },
+    sendBoard() {
+      if (this.id_board != -1) {
+        this.updateBoard();
+      } else {
+        this.saveBoard();
+      }
+    },
     saveBoard() {
-      this.axios.post("users/saveassamblies", this.forSend).then(res => {
-        console.log(res);
-      });
+      this.axios
+        .post(
+          "users/saveasmbl",
+          {
+            id_user: this.user.id,
+            save_json: { ...this.forSend }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
+          }
+        )
+        .then(res => {
+          this.id_board = res.data;
+          this.$router.push("/myboard");
+        });
+    },
+    updateBoard() {
+      this.axios
+        .post(
+          "users/updasmbl",
+          {
+            id: this.id_board,
+            id_user: this.user.id,
+            save_json: { ...this.forSend }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
+          }
+        )
+        .then(res => {
+          this.$router.push("/myboard");
+        });
     },
     saveName(name) {
       this.forSend.name = name;
@@ -161,14 +215,13 @@ export default {
     checkUser() {
       if (this.isUser && this.forSend.name == "noname") {
         this.modalName = true;
-        this.forSend.id_user = this.user.id;
       }
     },
-    recount(mnf){
+    recount(mnf) {
       this.forSend.insw.incb.incb_mnf = mnf;
       this.forSend.list_outcb.map(item => {
         item.outcb_mnf = mnf;
-      })
+      });
       this.calc();
     }
   },
@@ -190,13 +243,6 @@ export default {
   },
   created() {
     this.checkUser();
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (from.path == "/myboard") {
-        vm.myBoard = true;
-      }
-    });
   }
 };
 </script>

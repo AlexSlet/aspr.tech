@@ -104,7 +104,8 @@ export default new Vuex.Store({
     user: {
       token: '',
       login: ''
-    }
+    },
+    forEdit: {}
   },
   mutations: {
     // setData(state, payload) {
@@ -131,9 +132,14 @@ export default new Vuex.Store({
         }`;
     },
     clearUser(state){
-      state.user.login = '';
-      state.user.token = '';
+      state.user = {};
       sessionStorage.removeItem('user');
+    },
+    setEdited(state, payload){
+      state.forEdit = {...payload}
+    },
+    clearEdited(state){
+      state.forEdit = {}
     }
   },
   actions: {
@@ -173,10 +179,13 @@ export default new Vuex.Store({
     //   return state.results;
     // },
     getIsUser: state => {
-      return state.user.token.length > 0;
+      return Object.keys(state.user).length > 0;
     },
     getUser: state => {
       return state.user;
+    },
+    getForEdit: state => {
+      return state.forEdit;
     }
   }
 

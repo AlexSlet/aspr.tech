@@ -111,7 +111,7 @@ export default {
       incb: {
         incb_current: 10,
         incb_voltage: 230,
-        incb_mnf: 1,
+        incb_mnf: 2,
         incb_series: 0
       }
     },
@@ -133,12 +133,9 @@ export default {
       { name: "Альфа", id: 83 }
     ],
     incb_mnf: [
-      { name: "Schneider Electric", id: 1 },
       { name: "DEKraft", id: 2 },
       { name: "IEK", id: 3 },
       { name: "TDM", id: 4 },
-      { name: "КЭАЗ", id: 5 },
-      { name: "ABB", id: 6 }
     ],
     incb_series: [{ name: "Бюджетная", id: 0 }]
   }),
