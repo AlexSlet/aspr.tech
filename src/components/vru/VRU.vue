@@ -62,7 +62,7 @@
           <v-flex xs12 d-flex class="pa-2">
             <v-btn color="success" :disabled="ifDisable" dark large @click="calc()">Рассчитать</v-btn>
             <v-btn
-              v-if="isUser && myBoard"
+              v-if="isUser"
               color="info"
               :disabled="ifDisable"
               large
@@ -96,7 +96,7 @@
         @closeModal="resultOpen = !resultOpen"
       ></Result>
     </v-layout>
-    <write-name v-if="modalName && myBoard" @sendName="saveName($event)"></write-name>
+    <write-name v-if="modalName" @sendName="saveName($event)"></write-name>
   </v-container>
 </template>
 <script>
@@ -120,7 +120,6 @@ export default {
     list_outcb: false,
     resultOpen: false,
     modalName: false,
-    myBoard: false,
     isSaved: {
       insw: false,
       comecs: false,
@@ -207,7 +206,6 @@ export default {
     checkUser() {
       if (this.isUser && this.forSend.name == "noname") {
         this.modalName = true;
-        this.forSend.id_user = this.user.id;
       }
     },
     recount(mnf) {
@@ -216,6 +214,19 @@ export default {
         item.outcb_mnf = mnf;
       });
       this.calc();
+    },
+    ifEdit() {
+      let editObj = this.$store.getters.getForEdit;
+      if (Object.keys(editObj).length > 0) {
+        this.forSend = { ...editObj };
+        this.id_board = editObj.id;
+        this.isSaved = {
+          insw: true,
+          comecs: true,
+          list_outcb: true
+        };
+      }
+      this.$store.commit("clearEdited");
     }
   },
   computed: {
@@ -235,14 +246,8 @@ export default {
     }
   },
   created() {
+    this.ifEdit();
     this.checkUser();
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (from.path == "/myboard") {
-        vm.myBoard = true;
-      }
-    });
   }
 };
 </script>

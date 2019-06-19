@@ -90,74 +90,35 @@ export default new Vuex.Store({
         { name: "2000x800x450" },
       ]
     },
-    // data: {
-    //   insw: {},
-    //   list_outcb: [],
-    //   comecs: {}
-    // },
-    // results: {
-    //   price: '',
-    //   link: '',
-    //   id: '',
-    //   alarms: []
-    // },
     user: {
-      token: '',
-      login: ''
     },
     forEdit: {}
   },
   mutations: {
-    // setData(state, payload) {
-    //   Vue.set(state.data, payload.name, payload.data);
-    // },
-    setMnf(state, payload){
+    setMnf(state, payload) {
       state.data.insw.incb.incb_mnf = payload;
       state.data.list_outcb.map(item => {
         item.outcb_mnf = payload;
       })
     },
-    // setResults(state, payload){
-    //   state.results = {
-    //     price: payload.price,
-    //     link: payload.link_specification,
-    //     id: payload.id_order,
-    //     alarms: payload.alarms
-    //   }
-    // },
-    setUser(state, payload){
-      state.user = {...payload};
+    setUser(state, payload) {
+      state.user = { ...payload };
       Vue.prototype.axios.defaults.headers.common["Authorization"] = `Bearer_${
         payload.token
         }`;
     },
-    clearUser(state){
+    clearUser(state) {
       state.user = {};
       sessionStorage.removeItem('user');
     },
-    setEdited(state, payload){
-      state.forEdit = {...payload}
+    setEdited(state, payload) {
+      state.forEdit = { ...payload }
     },
-    clearEdited(state){
+    clearEdited(state) {
       state.forEdit = {}
     }
   },
   actions: {
-    // sendData({ state, commit }) {
-    //   // let params = new URLSearchParams();
-    //   // params.append('data', JSON.stringify(state.data));
-    //   return axios.post('math/switchboard',state.data, {
-    //     headers: {
-    //       'Content-Type': 'text/plain'
-    //     }
-    //   }).then(res => {
-    //     commit('setResults', res.data);
-    //   })
-    // },
-    // sendDataChanged({commit, dispatch}, payload){
-    //   commit('setMnf', payload);
-    //   return dispatch('sendData');
-    // },
   },
   getters: {
     getSizes: state => id => {
@@ -166,18 +127,6 @@ export default new Vuex.Store({
     getCurrent: state => {
       return state.current;
     },
-    // getInsw: state => {
-    //   return state.data.insw;
-    // },
-    // getListOut: state => {
-    //   return state.data.list_outcb;
-    // },
-    // getEcs: state => {
-    //   return state.data.comecs;
-    // },
-    // getResults: state => {
-    //   return state.results;
-    // },
     getIsUser: state => {
       return Object.keys(state.user).length > 0;
     },

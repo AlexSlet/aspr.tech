@@ -134,7 +134,10 @@ export default {
       comecs: {}
     },
     id_board: -1,
-    user_id: -1
+    user_id: -1,
+    test: {
+      test: {}
+    }
   }),
   methods: {
     setSaved(e) {
@@ -223,6 +226,19 @@ export default {
         item.outcb_mnf = mnf;
       });
       this.calc();
+    },
+    ifEdit() {
+      let editObj = this.$store.getters.getForEdit;
+      if (Object.keys(editObj).length > 0) {
+        this.forSend = { ...editObj };
+        this.id_board = editObj.id;
+        this.isSaved = {
+          insw: true,
+          comecs: true,
+          list_outcb: true
+        };
+      }
+      this.$store.commit("clearEdited");
     }
   },
   computed: {
@@ -242,6 +258,7 @@ export default {
     }
   },
   created() {
+    this.ifEdit();
     this.checkUser();
   }
 };

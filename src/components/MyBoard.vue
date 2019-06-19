@@ -22,7 +22,13 @@
           <v-flex xs6>
             <v-layout>
               <v-flex xs7>
-                <v-text-field hide-details label="Найти шкаф" prepend-icon="search"></v-text-field>
+                <v-text-field
+                  hide-details
+                  label="Найти шкаф"
+                  v-model="search"
+                  @input="searchBoard()"
+                  prepend-icon="search"
+                ></v-text-field>
               </v-flex>
               <v-flex xs4 d-flex align-end>
                 <v-menu offset-y>
@@ -51,7 +57,7 @@
       <v-layout row wrap>
         <v-flex>
           <v-layout row wrap>
-            <v-flex xs4 v-for="(item,i) in boards" :key="i">
+            <v-flex xs4 v-for="(item,i) in searchArr" :key="i">
               <v-card class="ma-3 myCard">
                 <v-img :src="require('@/assets/bg_1.png')" aspect-ratio="2.5">
                   <div class="cardOverlay">
@@ -94,9 +100,13 @@
 </template>
 
 <script>
+import { log } from "util";
+
 export default {
   name: "MyBoards",
   data: () => ({
+    search: "",
+    searchArr: [],
     addBoards: [
       { name: "ВРУ", link: "/vru" },
       { name: "Квартирные электрошкафы", link: "/flatboard" },
@@ -116,13 +126,30 @@ export default {
     getMyBoards() {
       this.axios.get("users/getasmbl?id=" + this.userData.id).then(res => {
         this.boards = [...res.data];
+        this.searchArr = [...res.data];
       });
     },
     editBoard(item) {
-      this.$store.commit("");
+      this.$store.commit("setEdited", item);
+      this.$router.push(this.checkType(item.type));
+    },
+    checkType(type) {
+      let url;
+      switch (type) {
+        case 1:
+          url = "/switchboard";
+          break;
+        case 2:
+          url = "/vru";
+          break;
+        case 3:
+          url = "/flatboard";
+          break;
+      }
+      return url;
     },
     deleteBoard(id) {
-      this.axios.post("users/delasmbl?id=" + id).then(res => {
+      this.axios.post("users/delasmbl?id=" + id).then(() => {
         this.getMyBoards();
       });
     },
@@ -143,11 +170,13 @@ export default {
           }
         )
         .then(res => {
-          window.open('http://aspr.tech:8080/math/loadfiles?id='+ res.data.id, 'new_window');
-          
+          window.open(
+            "http://aspr.tech:8080/math/loadfiles?id=" + res.data.id,
+            "new_window"
+          );
         });
     },
-    checkUrl(type){
+    checkUrl(type) {
       let url;
       switch (type) {
         case 1:
@@ -159,8 +188,17 @@ export default {
         case 3:
           url = "users/saveasmbl";
           break;
-      };
+      }
       return url;
+    },
+    searchBoard() {
+      if (this.search.length == 0) {
+        this.searchArr = this.boards;
+      } else {
+        this.searchArr = this.boards.filter(item => {
+          return item.name.includes(this.search);
+        });
+      }
     }
   },
   computed: {
