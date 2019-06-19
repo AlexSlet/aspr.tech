@@ -23,7 +23,7 @@
                 height="30"
                 hide-details
                 v-model="list_incb[i].outcb_current"
-                :items="getCurrent"
+                :items="outcb_current"
                 placeholder="Номинальный ток"
                 outline
               ></v-select>
@@ -84,20 +84,19 @@ export default {
       {
         outcb_current: 10,
         outcb_voltage: 230,
-        outcb_mnf: 1,
+        outcb_mnf: 2,
         outcb_series: 0
       }
     ],
     outcb_voltage: [230, 400],
     outcb_mnf: [
-      { name: "Schneider Electric", id: 1 },
       { name: "DEKraft", id: 2 },
       { name: "IEK", id: 3 },
       { name: "TDM", id: 4 },
-      { name: "КЭАЗ", id: 5 },
-      { name: "ABB", id: 6 }
+      { name: "EKF", id: 7 },
     ],
     outcb_series: [{ name: "Бюджетная", id: 0 }],
+    outcb_current: [6, 10, 16, 20, 25, 32, 40, 50, 63, 80, 100],
     message: false
   }),
   methods: {
@@ -105,7 +104,7 @@ export default {
       this.list_incb.push({
         outcb_current: 10,
         outcb_voltage: 230,
-        outcb_mnf: 1,
+        outcb_mnf: 2,
         outcb_series: 0
       });
     },
@@ -118,11 +117,6 @@ export default {
           data: this.list_incb
         });
     },
-  },
-  computed: {
-    getCurrent() {
-      return this.$store.getters.getCurrent;
-    }
   },
   created() {
     if (this.dataFilds.length != 0) {

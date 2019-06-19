@@ -196,7 +196,7 @@ export default {
         this.searchArr = this.boards;
       } else {
         this.searchArr = this.boards.filter(item => {
-          return item.name.includes(this.search);
+          return item.name.toLowerCase().includes(this.search.toLowerCase());
         });
       }
     }

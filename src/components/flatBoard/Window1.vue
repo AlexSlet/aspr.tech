@@ -42,7 +42,7 @@
               height="30"
               hide-details
               v-model="ecs.incb.incb_current"
-              :items="getCurrent"
+              :items="incb_current"
               placeholder="Номинальный ток"
               outline
             ></v-select>
@@ -88,8 +88,8 @@
           <v-flex xs12>
             <h4 class="mt-2">Укажите параметры корпуса шкафа</h4>
             <v-radio-group hide-details class="ma-0" v-model="ecs.ecs_aparttype">
-              <v-radio label="Пластиковый корпус" :value="1"></v-radio>
-              <v-radio label="металический навесной" :value="2"></v-radio>
+              <v-radio label="Пластиковый бокс" :value="1"></v-radio>
+              <v-radio label="Металический навесной" :value="2"></v-radio>
             </v-radio-group>
           </v-flex>
         </v-layout>
@@ -117,27 +117,29 @@ export default {
     },
     pmeter_aparttype: [
       {
-        name: "Однофазный многотарифный (2 тарифа)",
+        name: "Счетчик электроэнергии однофазный многотарифный",
         id: 1
       },
       {
-        name: "Счетчик элекроэнергии с GSM",
+        name: "Счетчик элекроэнергии однофазный многотарифный с GSM",
         id: 2
       }
     ],
     incb_voltage: [230, 400],
     pmeter_mnf: [
       { name: "Ленэлектро", id: 84 },
-      { name: "НЕВА", id: 81 },
-      { name: "Меркурий", id: 82 },
-      { name: "Альфа", id: 83 }
+      // { name: "НЕВА", id: 81 },
+      // { name: "Меркурий", id: 82 },
+      // { name: "Альфа", id: 83 }
     ],
     incb_mnf: [
       { name: "DEKraft", id: 2 },
       { name: "IEK", id: 3 },
       { name: "TDM", id: 4 },
+      { name: "EKF", id: 7 },
     ],
-    incb_series: [{ name: "Бюджетная", id: 0 }]
+    incb_series: [{ name: "Бюджетная", id: 0 }],
+    incb_current: [6, 10, 16, 20, 25, 32, 40, 50, 63, 80, 100],
   }),
   methods: {
     saveData() {
@@ -145,11 +147,6 @@ export default {
         name: "insw",
         data: this.ecs
       });
-    }
-  },
-  computed: {
-    getCurrent() {
-      return this.$store.getters.getCurrent;
     }
   },
   created() {
