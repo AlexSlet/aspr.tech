@@ -25,8 +25,8 @@
         </v-list>
       </v-menu>
       <div v-else>
-        <v-btn outline color="blue darken-4" :to="'/login'">Login</v-btn>
-        <v-btn outline color="blue darken-4" :to="'/signin'">SignIn</v-btn>
+        <v-btn outline color="blue darken-4" :to="'/login'">Войти</v-btn>
+        <v-btn outline color="blue darken-4" :to="'/signin'">Регистрация</v-btn>
       </div>
     </v-toolbar>
     <v-container fluid class="pa-0">

@@ -170,6 +170,7 @@ export default {
           }
         )
         .then(res => {
+          
           window.open(
             "http://aspr.tech:8080/math/loadfiles?id=" + res.data.id,
             "new_window"

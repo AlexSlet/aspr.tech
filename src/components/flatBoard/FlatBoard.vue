@@ -105,7 +105,8 @@ export default {
       insw: {},
       list_outcb: []
     },
-    id_board: -1
+    id_board: -1,
+    user_id: -1,
   }),
   methods: {
     setSaved(e) {
@@ -115,11 +116,19 @@ export default {
     },
     calc() {
       this.axios
-        .post("math/apartsw", this.forSend, {
-          headers: {
-            "Content-Type": "text/plain"
+        .post(
+          "math/apartsw",
+          {
+            id: this.id_board,
+            id_user: this.user_id,
+            save_json: { ...this.forSend }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
           }
-        })
+        )
         .then(res => {
           this.resData = { ...res.data };
           this.resultOpen = true;

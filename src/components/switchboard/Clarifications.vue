@@ -102,7 +102,7 @@ export default {
     modalData: Object
   },
   data: () => ({
-    recBoard: true,
+    recBoard: false,
     ecs: {
       ecs_mnf: 52,
       ecs_size: "2000x800x600",

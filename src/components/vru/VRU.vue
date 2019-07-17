@@ -126,6 +126,7 @@ export default {
       list_outcb: false
     },
     id_board: -1,
+    user_id: -1,
     resData: {},
     forSend: {
       type: 2,
@@ -143,11 +144,19 @@ export default {
     },
     calc() {
       this.axios
-        .post("math/switchboardv1", this.forSend, {
-          headers: {
-            "Content-Type": "text/plain"
+        .post(
+          "math/switchboardv1",
+          {
+            id: this.id_board,
+            id_user: this.user_id,
+            save_json: { ...this.forSend }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
           }
-        })
+        )
         .then(res => {
           this.resData = { ...res.data };
           this.resultOpen = true;
