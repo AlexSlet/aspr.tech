@@ -7,7 +7,7 @@
         <v-card class="ma-3 white--text" color="commonCard">
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">Введите параметры</h3>
+              <h3 class="headline mb-0">Вводные автоматы</h3>
             </div>
           </v-card-title>
           <v-card-actions class="mt-4">
@@ -25,7 +25,7 @@
         <v-card class="ma-3 white--text" color="commonCard">
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">Введите параметры отходящих автоматов</h3>
+              <h3 class="headline mb-0">Отходящие линии</h3>
             </div>
           </v-card-title>
           <v-card-actions class="mt-4">
@@ -36,6 +36,24 @@
               <v-flex xs6 style="text-align: right;">
                 <v-icon v-if="isSaved.list_outcb" class="mt-2" color="green">check_circle</v-icon>
                 <v-icon v-if="!isSaved.list_outcb" class="mt-2" color="red">highlight_off</v-icon>
+              </v-flex>
+            </v-layout>
+          </v-card-actions>
+        </v-card>
+        <v-card class="ma-3 white--text" color="commonCard">
+          <v-card-title primary-title>
+            <div>
+              <h3 class="headline mb-0">Уточнения к комплектации</h3>
+            </div>
+          </v-card-title>
+          <v-card-actions class="mt-4">
+            <v-layout row wrap>
+              <v-flex xs6>
+                <v-btn color="blue darken-4" outline @click="comecs = !comecs">Ввести данные</v-btn>
+              </v-flex>
+              <v-flex xs6 style="text-align: right;">
+                <v-icon v-if="isSaved.comecs" class="mt-2" color="green">check_circle</v-icon>
+                <v-icon v-if="!isSaved.comecs" class="mt-2" color="red">highlight_off</v-icon>
               </v-flex>
             </v-layout>
           </v-card-actions>
@@ -65,48 +83,42 @@
         @closeModal="list_outcb = !list_outcb"
         @saved="setSaved($event)"
       ></window2>
-      <Result
-        :resData="resData"
-        v-if="resultOpen"
-        @recount="recount($event)"
-        @closeModal="resultOpen = !resultOpen"
-      ></Result>
+      <window3
+        :dataFilds="forSend.comecs"
+        v-if="comecs"
+        @closeModal="comecs = !comecs"
+        @saved="setSaved($event)"
+      ></window3>
     </v-layout>
     <write-name v-if="modalName" @sendName="saveName($event)"></write-name>
   </v-container>
 </template>
 <script>
-import Window1 from "@/components/flatBoard/Window1";
-import Window2 from "@/components/flatBoard/Window2";
-import Result from "@/components/Result";
-import WriteName from "@/components/WriteName";
-import { log } from "util";
 export default {
-  name: "FlatBoard",
+  name: "VRU",
   components: {
-    Window1,
-    Window2,
-    Result,
-    WriteName
   },
   data: () => ({
     insw: false,
+    comecs: false,
     list_outcb: false,
     resultOpen: false,
     modalName: false,
     isSaved: {
       insw: false,
+      comecs: false,
       list_outcb: false
-    },
-    resData: {},
-    forSend: {
-      type: 3,
-      name: "noname",
-      insw: {},
-      list_outcb: []
     },
     id_board: -1,
     user_id: -1,
+    resData: {},
+    forSend: {
+      type: 2,
+      name: "noname",
+      insw: {},
+      list_outcb: [],
+      comecs: {}
+    }
   }),
   methods: {
     setSaved(e) {
@@ -117,7 +129,7 @@ export default {
     calc() {
       this.axios
         .post(
-          "math/apartsw",
+          "math/switchboardv1",
           {
             id: this.id_board,
             id_user: this.user_id,
@@ -187,7 +199,6 @@ export default {
     checkUser() {
       if (this.isUser && this.forSend.name == "noname") {
         this.modalName = true;
-        this.forSend.id_user = this.user.id;
       }
     },
     recount(mnf) {

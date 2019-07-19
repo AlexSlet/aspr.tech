@@ -29,7 +29,7 @@
         <v-btn outline color="blue darken-4" :to="'/signin'">Регистрация</v-btn>
       </div>
     </v-toolbar>
-    <v-container fluid class="pa-0">
+    <v-container fluid class="pa-0" style="background-color: #fff;">
       <router-view/>
     </v-container>
   </v-app>
