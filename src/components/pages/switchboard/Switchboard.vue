@@ -49,7 +49,7 @@
           <v-card-actions class="mt-4">
             <v-layout row wrap>
               <v-flex xs6>
-                <v-btn color="blue darken-4" outline @click="comecs = !comecs">Ввести данные</v-btn>
+                <v-btn color="blue darken-4" outline @click="comecs = !list_outcb">Ввести данные</v-btn>
               </v-flex>
               <v-flex xs6 style="text-align: right;">
                 <v-icon v-if="isSaved.comecs" class="mt-2" color="green">check_circle</v-icon>
@@ -60,7 +60,7 @@
         </v-card>
         <v-layout row wrap>
           <v-flex xs12 d-flex class="pa-2">
-            <v-btn color="success" :disabled="ifDisable" dark large @click="calc()">Рассчитать</v-btn>
+            <v-btn color="success" :disabled="ifDisable" large @click="calc()">Рассчитать</v-btn>
             <v-btn
               v-if="isUser"
               color="info"
@@ -71,69 +71,62 @@
           </v-flex>
         </v-layout>
       </v-flex>
-      <window1
-        :dataFilds="forSend.insw"
+      <Introductory
+        :modalData="forSend.insw"
         v-if="insw"
         @closeModal="insw = !insw"
         @saved="setSaved($event)"
-      ></window1>
-      <window2
-        :dataFilds="forSend.list_outcb"
+      ></Introductory>
+      <Outgoing
+        :modalData="forSend.list_outcb"
         v-if="list_outcb"
         @closeModal="list_outcb = !list_outcb"
         @saved="setSaved($event)"
-      ></window2>
-      <window3
-        :dataFilds="forSend.comecs"
+      ></Outgoing>
+      <Clarifications
+        :modalData="forSend.comecs"
         v-if="comecs"
         @closeModal="comecs = !comecs"
         @saved="setSaved($event)"
-      ></window3>
-      <Result
-        :resData="resData"
-        v-if="resultOpen"
-        @recount="recount($event)"
-        @closeModal="resultOpen = !resultOpen"
-      ></Result>
+      ></Clarifications>
     </v-layout>
     <write-name v-if="modalName" @sendName="saveName($event)"></write-name>
   </v-container>
 </template>
 <script>
-import Window1 from "@/components/vru/Window1";
-import Window2 from "@/components/flatBoard/Window2";
-import Window3 from "@/components/vru/Window3";
-import Result from "@/components/Result";
-import WriteName from "@/components/WriteName";
+import Introductory from "./Introductory";
+import Outgoing from "./Outgoing";
+import Clarifications from "./Clarifications";
 export default {
-  name: "VRU",
+  name: "Switchboard",
   components: {
-    Window1,
-    Window2,
-    Window3,
-    Result,
-    WriteName
+    Introductory,
+    Outgoing,
+    Clarifications,
   },
   data: () => ({
     insw: false,
-    comecs: false,
     list_outcb: false,
+    comecs: false,
     resultOpen: false,
     modalName: false,
     isSaved: {
       insw: false,
-      comecs: false,
-      list_outcb: false
+      list_outcb: false,
+      comecs: false
     },
-    id_board: -1,
-    user_id: -1,
     resData: {},
     forSend: {
-      type: 2,
+      type: 1,
       name: "noname",
       insw: {},
       list_outcb: [],
       comecs: {}
+    },
+    id_board: -1,
+    user_id: -1,
+    test: {
+      test: {}
     }
   }),
   methods: {
@@ -143,9 +136,9 @@ export default {
       this.forSend[e.name] = e.data;
     },
     calc() {
-      this.axios
+      return this.axios
         .post(
-          "math/switchboardv1",
+          "math/switchboard",
           {
             id: this.id_board,
             id_user: this.user_id,
@@ -158,9 +151,9 @@ export default {
           }
         )
         .then(res => {
+          this.id_board = res.data.id;
           this.resData = { ...res.data };
           this.resultOpen = true;
-          console.log(res);
         });
     },
     sendBoard() {

@@ -124,10 +124,12 @@ export default {
       this.$router.push(link);
     },
     getMyBoards() {
-      this.axios.get("users/getasmbl?id=" + this.userData.id).then(res => {
-        this.boards = [...res.data];
-        this.searchArr = [...res.data];
-      });
+      if (this.user) {
+        this.axios.get("users/getasmbl?id=" + this.userData.id).then(res => {
+          this.boards = [...res.data];
+          this.searchArr = [...res.data];
+        });
+      }
     },
     editBoard(item) {
       this.$store.commit("setEdited", item);
@@ -170,7 +172,6 @@ export default {
           }
         )
         .then(res => {
-          
           window.open(
             "http://aspr.tech:8080/math/loadfiles?id=" + res.data.id,
             "new_window"

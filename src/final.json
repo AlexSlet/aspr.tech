@@ -1,0 +1,52 @@
+{
+    "save_json": {
+        "insw": {
+            "list_eq": [
+                {
+                    "eq_type": "1",
+                    "cb_current": "int",
+                    "cb_voltage": "int",
+                    "cb_mnf": "int",
+                    "cb_series": "int",
+                    "eq_amount": "int"
+                },
+                {
+                    "eq_type": "4",
+                    "pmeter_voltage": "int",
+                    "pmeter_mnf": "int",
+                    "pmeter_tarif": "int",
+                    "eq_amount": "int"
+                }
+            ],
+            "ecs_apart": "int"
+        },
+        "outsw": {
+            "list_eq": [
+                {   
+                    "eq_type": "1",
+                    "cb_current": "int",
+                    "cb_voltage": "int",
+                    "cb_mnf": "int",
+                    "cb_series": "int",
+                    "eq_amount": "int"
+                },
+                {
+                    "eq_type": "2",
+                    "uzo_current": "int",
+                    "uzo_voltage": "int",
+                    "uzo_mnf": "int",
+                    "uzo_series": "int",
+                    "eq_amount": "int"
+                },
+                {
+                    "eq_type": "3",
+                    "difcb_current": "int",
+                    "difcb_voltage": "int",
+                    "difcb_mnf": "int",
+                    "difcb_series": "int",
+                    "eq_amount": "int"
+                }
+            ]
+        }
+    }
+}
