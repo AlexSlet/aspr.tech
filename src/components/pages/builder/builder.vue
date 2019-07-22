@@ -12,7 +12,7 @@
         </v-tabs>
         <v-tabs-items v-model="model">
           <v-tab-item v-for="tab in tabs" :key="tab.id" :value="`tab-${tab.id}`">
-            <device-add-list :list="tab.devices" @addDevice="addDevice($event)"></device-add-list>
+            <device-add-list :type="tab.type" :list="tab.devices" @addDevice="addDevice($event)"></device-add-list>
           </v-tab-item>
         </v-tabs-items>
       </v-flex>
@@ -42,18 +42,18 @@ export default {
             {
               title: "Добавить вводные устройства:",
               list: [
-                "Автоматический выключатель",
-                "Устройство защиты отключения",
-                "Дифференциальный автомат"
+                { name: "Автоматический выключатель", type: "cb" },
+                {name: "Устройство защиты отключения", type:"uzo"},
+                {name: "Дифференциальный автомат", type: "difcb"}
               ]
             },
             {
               title: "Добавьте счетчик электроэнергии:",
-              list: ["Счетчик электроэнергии"]
+              list: [{name: "Счетчик электроэнергии", type: "pmeter"}]
             },
             {
               title: "Укажите параметры корпуса шкафа:",
-              list: ["Параметры корпуса шкафа"]
+              list: [{name: "Параметры корпуса шкафа", type: "ecs"}]
             }
           ]
         },
@@ -65,9 +65,9 @@ export default {
             {
               title: "Добавить отходящие устройства:",
               list: [
-                "Автоматический выключатель",
-                "Устройство защиты отключения",
-                "Дифференциальный автомат"
+                { name: "Автоматический выключатель", type: "cb" },
+                {name: "Устройство защиты отключения", type:"uzo"},
+                {name: "Дифференциальный автомат", type: "difcb"}
               ]
             }
           ]

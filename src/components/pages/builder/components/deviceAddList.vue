@@ -7,7 +7,7 @@
           <ul>
             <template v-if="item.list.length <= 1">
               <li v-for="(btn,i) in item.list" :key="i">
-                <span class="deviceName">{{btn}}</span>
+                <span class="deviceName">{{btn.name}}</span>
                 <v-btn fab dark small color="info" @click="$emit('addDevice', item.list[0])">
                   <v-icon dark>add</v-icon>
                 </v-btn>
@@ -15,7 +15,7 @@
             </template>
             <template v-else>
               <li>
-                <v-select class="deviceSelect" :items="item.list" v-model="selectVal" solo></v-select>
+                <v-select class="deviceSelect" :items="item.list" item-text="name" item-value="type" v-model="selectVal" solo></v-select>
                 <v-btn fab dark small color="info" @click="$emit('addDevice', selectVal)">
                   <v-icon dark>add</v-icon>
                 </v-btn>
@@ -31,7 +31,8 @@
 <script>
 export default {
   props: {
-    list: Array
+    list: Array,
+    type: String
   },
   data() {
     return {

@@ -1,5 +1,5 @@
 <template>
-  <v-text-field solo mask="###" v-model="value"></v-text-field>
+  <v-text-field solo mask="###" v-model="handlerChange"></v-text-field>
 </template>
 <script>
 export default {
@@ -17,7 +17,7 @@ export default {
         return this.value;
       },
       set(val) {
-        this.$emit("update-value", this.data.name, val);
+        this.$emit("update-value", {name: this.data.name, value: val});
       }
     }
   },
