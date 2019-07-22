@@ -35,7 +35,7 @@ export default new Router({
     {
       path: '/flatboard',
       name: 'flatboard',
-      component: FlatBoard
+      component: Builder
     },
     {
       path: '/myboard',

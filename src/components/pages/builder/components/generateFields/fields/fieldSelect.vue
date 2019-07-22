@@ -17,7 +17,7 @@ export default {
         return this.value;
       },
       set(val) {
-        this.$emit("update-value", this.data.name, val);
+        this.$emit("update-value", {name: this.data.name, value: val});
       }
     }
   }

@@ -1,8 +1,8 @@
 <template>
   <v-layout row wrap>
-    <v-flex class="px-1" xs6 v-for="(field,i) in pmeter" :key="i">
+    <v-flex class="px-1" xs6 v-for="(field,i) in fields" :key="i">
       <span>{{field.title}}</span>
-      <component :is="field.type" :data="field"></component>
+      <component :is="field.type" :data="field" @update-value="updateVal($event)"></component>
     </v-flex>
   </v-layout>
 </template>
@@ -19,53 +19,46 @@ export default {
   },
   data() {
     return {
-      pmeter: [
+      fields: [
         {
-          name: "pmeter_voltage",
+          name: "cb_current",
           type: "fieldSelect",
-          title: "Напряжение",
-          values: [
-            {
-              name: "Однофазный",
-              value: 230
-            },
-            {
-              name: "Трехфазный",
-              value: 400
-            }
-          ]
+          title: "Номинальный ток, А",
+          values: [6, 10, 16, 20, 25, 32, 40, 50]
         },
         {
-          name: "pmeter_mnf",
+          name: "cb_voltage",
+          type: "fieldSelect",
+          title: "Напряжение, В",
+          values: [230, 400]
+        },
+        {
+          name: "cb_mnf",
           type: "fieldSelect",
           title: "Производитель",
           values: [
             {
-              name: "Ленэлектро",
-              value: 84
+              name: "IEK",
+              value: 3
             },
             {
-              name: "Инкотекс (Меркурий)",
-              value: 82
-            },
-            {
-              name: "ЛЭМЗ",
-              value: 85
+              name: "ABB",
+              value: 6
             }
           ]
         },
         {
-          name: "pmeter_tarif",
+          name: "cb_series",
           type: "fieldSelect",
-          title: "Тариф",
+          title: "Серия",
           values: [
             {
-              name: "Однотарифный",
-              value: 1
+              name: "Квартирная серия ВА47-29",
+              value: 0
             },
             {
-              name: "многотарифный",
-              value: 2
+              name: "Квартирная серия SH200",
+              value: 1
             }
           ]
         },
@@ -77,6 +70,11 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    updateVal(name) {
+      console.log(name);
+    }
   }
 };
 </script>
