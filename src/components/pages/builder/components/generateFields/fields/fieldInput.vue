@@ -1,5 +1,5 @@
 <template>
-  <v-text-field solo mask="###" v-model="handlerChange"></v-text-field>
+  <v-text-field solo mask="###" v-model.number="handlerChange"></v-text-field>
 </template>
 <script>
 export default {

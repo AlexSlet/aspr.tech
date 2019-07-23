@@ -3,20 +3,38 @@
     <v-flex xs12>
       <ul>
         <li class="py-2" v-for="item in list" :key="item.id">
-          <h4>{{item.title}}</h4>
+          <h4>
+            <span v-if="item.required">*</span>
+            {{item.title}}
+          </h4>
           <ul>
             <template v-if="item.list.length <= 1">
               <li v-for="(btn,i) in item.list" :key="i">
                 <span class="deviceName">{{btn.name}}</span>
-                <v-btn fab dark small color="info" @click="$emit('addDevice', item.list[0])">
+                <v-btn
+                  fab
+                  dark
+                  small
+                  color="info"
+                  @click="$emit('addDevice', {
+                  tab: type, id: item.id, formType: item.list[0].type
+                })"
+                >
                   <v-icon dark>add</v-icon>
                 </v-btn>
               </li>
             </template>
             <template v-else>
               <li>
-                <v-select class="deviceSelect" :items="item.list" item-text="name" item-value="type" v-model="selectVal" solo></v-select>
-                <v-btn fab dark small color="info" @click="$emit('addDevice', selectVal)">
+                <v-select
+                  class="deviceSelect"
+                  :items="item.list"
+                  item-text="name"
+                  item-value="type"
+                  v-model="selectVal"
+                  solo
+                ></v-select>
+                <v-btn fab dark small color="info" @click="addBySelect(item,)">
                   <v-icon dark>add</v-icon>
                 </v-btn>
               </li>
@@ -25,6 +43,7 @@
           <v-divider></v-divider>
         </li>
       </ul>
+      <small>Поля со * обязательные!</small>
     </v-flex>
   </v-layout>
 </template>
@@ -36,23 +55,30 @@ export default {
   },
   data() {
     return {
-      selectVal: ''
+      selectVal: ""
     };
+  },
+  methods: {
+    addBySelect(item) {
+      if (this.selectVal !== "") {
+        this.$emit("addDevice", {
+          tab: this.type,
+          id: item.id,
+          formType: this.selectVal
+        });
+      }
+    }
   },
   computed: {}
 };
 </script>
 <style scoped>
-ul {
-  list-style: none;
-  padding-left: 0;
-}
 .deviceName {
-  width: 50%;
+  width: 70%;
   display: inline-block;
 }
-.deviceSelect{
-  width: 50%;
+.deviceSelect {
+  width: 70%;
   display: inline-block;
 }
 </style>

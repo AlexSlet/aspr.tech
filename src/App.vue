@@ -30,7 +30,7 @@
       </div>
     </v-toolbar>
     <v-container fluid class="pa-0" style="background-color: #fff;">
-      <router-view/>
+      <router-view />
     </v-container>
   </v-app>
 </template>
@@ -55,9 +55,9 @@ export default {
     logOut() {
       this.$store.commit("clearUser");
     },
-    checkUser(){
-      if(sessionStorage.user){
-        this.$store.commit('setUser', JSON.parse(sessionStorage.user));
+    checkUser() {
+      if (sessionStorage.user) {
+        this.$store.commit("setUser", JSON.parse(sessionStorage.user));
       }
     }
   },
@@ -67,7 +67,7 @@ export default {
   mounted() {
     this.location = this.$route.path;
   },
-  created(){
+  created() {
     this.checkUser();
   }
 };
@@ -78,6 +78,10 @@ export default {
 }
 .v-btn__content {
   font-weight: 400;
+}
+ul {
+  list-style: none;
+  padding-left: 0;
 }
 </style>
 
