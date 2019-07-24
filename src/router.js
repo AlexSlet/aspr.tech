@@ -3,13 +3,12 @@ import Router from 'vue-router'
 import Home from './components/pages/Home.vue'
 import Switchboard from './components/pages/switchboard/Switchboard.vue'
 import VRU from './components/pages/vru/VRU.vue'
-//import FlatBoard from './components/pages/flatBoard/FlatBoard.vue'
+import FlatBoard from './components/pages/flatBoard/FlatBoard.vue'
 import MyBoard from './components/pages/MyBoard.vue'
 import Opportunities from './components/pages/Opportunities.vue'
 import Help from './components/pages/Help.vue'
 import Login from './components/pages/Login.vue'
 import SignIn from './components/pages/SignIn.vue'
-import Builder from './components/pages/builder/builder.vue'
 
 Vue.use(Router)
 
@@ -35,7 +34,7 @@ export default new Router({
     {
       path: '/flatboard',
       name: 'flatboard',
-      component: Builder
+      component: FlatBoard
     },
     {
       path: '/myboard',
@@ -61,11 +60,6 @@ export default new Router({
       path: '/signin',
       name: 'signin',
       component: SignIn
-    },
-    {
-      path: '/builder',
-      name: 'builder',
-      component: Builder
     },
   ]
 })

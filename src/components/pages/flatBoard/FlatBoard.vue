@@ -1,55 +1,95 @@
 <template>
-  <v-container>
-    <v-layout row wrap justify-center>
-      <v-flex xs6>
-        <h3 style="text-align: center;">Заполните данные распределительного устройства</h3>
-        <v-card class="ma-3 white--text" color="commonCard" v-for="modal in modalsList" :key="modal.id">
-          <v-card-title primary-title>
-            <div>
-              <h3 class="headline mb-0">{{modal.name}}</h3>
-            </div>
-          </v-card-title>
-          <v-card-actions class="mt-4">
-            <v-layout row wrap>
-              <v-flex xs6>
-                <v-btn color="blue darken-4" outline>Добавить устройства</v-btn>
-              </v-flex>
-            </v-layout>
-          </v-card-actions>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <builder :tabs="tabs" @calc="calc($event)"></builder>
 </template>
 <script>
-
+import builder from "@/components/pages/builder/builder";
 export default {
   name: "FlatBoard",
   components: {
+    builder
   },
   data: () => ({
-   modalsList: [
-     {
-       id: 1,
-       name: "Параметры вводных устройств и комплектующие",
-       type: 'insw'
-     },
-     {
-       id: 2,
-       name: "Параметры отходящих автоматов",
-       type: 'list_eq'
-     },
-   ]
+    forSend: {
+      type: 3,
+      name: "noname"
+    },
+    resData: {},
+    id_board: -1,
+    user_id: -1,
+    tabs: [
+      {
+        id: 0,
+        name: "Вводные устройства",
+        type: "insw",
+        devices: [
+          {
+            id: 0,
+            required: true,
+            title: "Добавить вводные устройства",
+            list: [
+              { name: "Автоматический выключатель", type: "cb" },
+              { name: "Устройство защиты отключения", type: "uzo" },
+              { name: "Дифференциальный автомат", type: "difcb" }
+            ]
+          },
+          {
+            id: 1,
+            required: false,
+            title: "Добавьте счетчик электроэнергии",
+            list: [{ name: "Счетчик электроэнергии", type: "pmeter" }]
+          },
+          {
+            id: 2,
+            required: true,
+            title: "Укажите параметры корпуса шкафа",
+            list: [{ name: "Параметры корпуса шкафа", type: "ecs" }]
+          }
+        ]
+      },
+      {
+        id: 1,
+        name: "Отходящие автоматы",
+        type: "outsw",
+        devices: [
+          {
+            id: 0,
+            required: true,
+            title: "Добавить отходящие устройства",
+            list: [
+              { name: "Автоматический выключатель", type: "cb" },
+              { name: "Устройство защиты отключения", type: "uzo" },
+              { name: "Дифференциальный автомат", type: "difcb" }
+            ]
+          }
+        ]
+      }
+    ]
   }),
   methods: {
-    
+    calc(event) {
+      this.forSend = { ...this.forSend, ...event };
+
+      return this.axios
+        .post(
+          "math/apartsw",
+          {
+            id: this.id_board,
+            id_user: this.user_id,
+            save_json: { ...this.forSend }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
+          }
+        )
+        .then(res => {
+          console.log(res);
+        });
+    }
   },
-  computed: {
-    
-  },
-  created() {
-    
-  }
+  computed: {},
+  created() {}
 };
 </script>
 

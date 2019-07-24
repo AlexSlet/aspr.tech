@@ -8,7 +8,6 @@
               <v-icon v-if="requiredDevices[tab.type].length == 0" color="green">check_circle</v-icon>
               <v-icon v-if="requiredDevices[tab.type].length != 0" color="red">highlight_off</v-icon>
             </div>
-
             {{ tab.name }}
           </v-tab>
         </v-tabs>
@@ -22,7 +21,12 @@
         <my-form :formName="formName" @saveDevice="saveDevice($event)"></my-form>
       </v-flex>
       <v-flex xs4 class="pl-4">
-        <result :data="save_json"></result>
+        <result
+          :data="save_json"
+          :requiredDevices="requiredDevices"
+          @removeItem="removeItem($event)"
+          @calc="calc()"
+        ></result>
       </v-flex>
     </v-layout>
   </v-container>
@@ -32,6 +36,9 @@ import deviceAddList from "./components/deviceAddList";
 import result from "./components/result";
 import myForm from "./components/generateFields/myForm";
 export default {
+  props:{
+    tabs: Array
+  },
   components: {
     deviceAddList,
     myForm,
@@ -41,54 +48,6 @@ export default {
     return {
       save_json: {},
       requiredDevices: {},
-      tabs: [
-        {
-          id: 0,
-          name: "Вводные устройства",
-          type: "insw",
-          devices: [
-            {
-              id: 0,
-              required: true,
-              title: "Добавить вводные устройства",
-              list: [
-                { name: "Автоматический выключатель", type: "cb" },
-                { name: "Устройство защиты отключения", type: "uzo" },
-                { name: "Дифференциальный автомат", type: "difcb" }
-              ]
-            },
-            {
-              id: 1,
-              required: false,
-              title: "Добавьте счетчик электроэнергии",
-              list: [{ name: "Счетчик электроэнергии", type: "pmeter" }]
-            },
-            {
-              id: 2,
-              required: true,
-              title: "Укажите параметры корпуса шкафа",
-              list: [{ name: "Параметры корпуса шкафа", type: "ecs" }]
-            }
-          ]
-        },
-        {
-          id: 1,
-          name: "Отходящие автоматы",
-          type: "outsw",
-          devices: [
-            {
-              id: 0,
-              required: true,
-              title: "Добавить отходящие устройства:*",
-              list: [
-                { name: "Автоматический выключатель", type: "cb" },
-                { name: "Устройство защиты отключения", type: "uzo" },
-                { name: "Дифференциальный автомат", type: "difcb" }
-              ]
-            }
-          ]
-        }
-      ],
       model: "tab-0",
       formName: {
         formType: "",
@@ -125,8 +84,26 @@ export default {
         dev => dev.id !== item.id
       );
     },
-    checkReq(tab) {
-      return this.requiredDevices[tab].length === 0;
+    isRequired(tabType, eqType) {
+      let tabByType = this.tabs.filter(item => {
+        return item.type === tabType;
+      });
+      let reqDevs = tabByType[0].devices.filter(dev => dev.required === true);
+      let dev = reqDevs.filter(obj => {
+        return obj.list.some(item => item.type === eqType);
+      });
+      if (dev.length !== 0) {
+        this.requiredDevices[tabType].push(dev[0]);
+      }
+    },
+    removeItem(indexes) {
+      if(!indexes.dubl){
+        this.isRequired(indexes.tabIndex, indexes.equipType);
+      }
+      this.save_json[indexes.tabIndex].list_eq.splice(indexes.equipIndex, 1);
+    },
+    calc(){
+      this.$emit('calc', this.save_json);
     }
   },
   created() {
@@ -139,10 +116,10 @@ export default {
 .border-right {
   border-right: 1px solid #ccc;
 }
-.caption{
+.caption {
   position: relative;
 }
-.req-icons{
+.req-icons {
   position: absolute;
   right: 0;
 }
