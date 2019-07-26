@@ -1,48 +1,61 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 class="mb-4">
-      <h3>{{eqName[formName.formType]}}</h3>
+      <h3>{{eqName[form.eq_type]}}</h3>
     </v-flex>
-    <template v-if="formName.formType === 'ecs'">
-      <v-flex class="px-1" xs12 v-for="field in form" :key="field.name + formName.tab">
+    <template v-if="form.eq_type === 5">
+      <v-flex class="px-1" xs12 v-for="field in formFields" :key="field.name + form.tab">
         <span>{{field.title}}</span>
         <component
           :is="field.type"
-          :key="field.name + formName.tab"
+          :key="field.name + form.tab"
           :data="field"
           @update-value="updateVal($event)"
         ></component>
       </v-flex>
     </template>
-    <v-flex v-else class="px-1" xs6 v-for="field in form" :key="field.name + formName.tab">
-      <span>{{field.title}}</span>
-      <component
-        :is="field.type"
-        :key="field.name + formName.tab"
-        :data="field"
-        @update-value="updateVal($event)"
-      ></component>
+    <template v-else>
+      <v-flex class="px-1" xs6 v-for="field in formFields" :key="field.name + form.tab">
+        <span>{{field.title}}</span>
+        <component
+          :is="field.type"
+          :key="field.name + form.tab"
+          :data="field"
+          @update-value="updateVal($event)"
+        ></component>
+      </v-flex>
+    </template>
+    <v-flex xs12>
+      <ul>
+        <li v-for="(note,i) in notes[form.eq_type]" :key="i">
+          <small>*{{note}}</small>
+        </li>
+      </ul>
     </v-flex>
-    <v-flex xs12 v-if="isFormName">
-      <v-btn :disabled="checkDataLength" block color="success" @click="saveDevice()">Сохранить</v-btn>
-    </v-flex>
+    <transition name="fade">
+      <v-flex xs12 v-if="isFormName">
+        <v-btn :disabled="checkDataLength" block color="success" @click="saveDevice()">Сохранить</v-btn>
+      </v-flex>
+    </transition>
   </v-layout>
 </template>
 <script>
 import fieldSelect from "./fields/fieldSelect";
 import fieldInput from "./fields/fieldInput";
-import { devices } from "@/devices.js";
 export default {
   components: {
     fieldSelect,
     fieldInput
   },
   props: {
-    formName: Object
+    form: Object,
+    notes: Object
   },
   data() {
     return {
-      formData: {}
+      formData: {
+        eq_type: null
+      }
     };
   },
   methods: {
@@ -51,26 +64,26 @@ export default {
     },
     saveDevice() {
       this.$emit("saveDevice", {
-        name: this.formName.tab,
-        id: this.formName.id,
+        name: this.form.tab,
+        id: this.form.id,
         equipment: this.formData
       });
+      this.formData = {
+        eq_type: null
+      };
     }
   },
   computed: {
-    form() {
-      this.formData = {
-        eq_type: this.formName.formType
-      };
-      return devices[this.formName.formType];
-    },
     checkDataLength() {
       let arrLength = Object.values(this.formData).length - 1;
-      let equalLength = arrLength !== this.form.length;
-      return equalLength;
+      return arrLength !== this.form.formFields.length;
+    },
+    formFields() {
+      this.formData.eq_type = this.form.eq_type;
+      return this.form.formFields;
     },
     isFormName() {
-      return this.formName.formType.length > 0;
+      return this.form.eq_type !== "";
     },
     eqName() {
       return this.$store.getters.getEqName;
@@ -79,3 +92,13 @@ export default {
   created() {}
 };
 </script>
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+</style>
+

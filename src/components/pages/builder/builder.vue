@@ -18,7 +18,7 @@
         </v-tabs-items>
       </v-flex>
       <v-flex xs4 class="border-right px-2">
-        <my-form :formName="formName" @saveDevice="saveDevice($event)"></my-form>
+        <my-form :notes="notes" :form="form" @saveDevice="saveDevice($event)"></my-form>
       </v-flex>
       <v-flex xs4 class="pl-4">
         <result
@@ -36,8 +36,10 @@ import deviceAddList from "./components/deviceAddList";
 import result from "./components/result";
 import myForm from "./components/generateFields/myForm";
 export default {
-  props:{
-    tabs: Array
+  props: {
+    tabs: Array,
+    typeBoard: Number,
+    notes: Object
   },
   components: {
     deviceAddList,
@@ -49,16 +51,22 @@ export default {
       save_json: {},
       requiredDevices: {},
       model: "tab-0",
-      formName: {
-        formType: "",
+      form: {
+        eq_type: "",
         id: "",
-        tab: ""
-      }
+        tab: "",
+        formFields: []
+      },
     };
   },
   methods: {
     addDevice(event) {
-      this.formName = event;
+      this.form.eq_type = event.eq_type;
+      this.form.tab = event.tab;
+      this.form.id = event.id;
+      this.axios.get(`front/asmbl${this.typeBoard}?eq_type=${event.eq_type}`).then(result => {
+        this.form.formFields = [...result.data];
+      });
     },
     setJsonFields() {
       this.tabs.forEach(tab => {
@@ -97,13 +105,13 @@ export default {
       }
     },
     removeItem(indexes) {
-      if(!indexes.dubl){
+      if (!indexes.dubl) {
         this.isRequired(indexes.tabIndex, indexes.equipType);
       }
       this.save_json[indexes.tabIndex].list_eq.splice(indexes.equipIndex, 1);
     },
-    calc(){
-      this.$emit('calc', this.save_json);
+    calc() {
+      this.$emit("calc", this.save_json);
     }
   },
   created() {

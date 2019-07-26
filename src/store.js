@@ -16,16 +16,23 @@ export default new Vuex.Store({
     user: {
     },
     forEdit: {},
+    devTypes: {
+      '1': 'cb',
+      '2': "uzo",
+      '3': "difcb",
+      '4': "pmeter",
+      '5': "ecs"
+    },
     tabName: {
       insw: 'Вводные устройства',
       outsw: 'Отходящие автоматы'
     },
     eqName: {
-      pmeter: 'Счет. электроэнергии',
-      ecs: 'Корпус шкафа',
-      cb: 'Авт. выключатель',
-      uzo: 'УЗО',
-      difcb: 'Диф. автомат'
+      "1": 'Авт. выключатель',
+      "2": 'УЗО',
+      "3": 'Диф. автомат',
+      "4": 'Счет. электроэнергии',
+      "5": 'Корпус шкафа'
     },
     manufacturer: {
       '3': "IEK",
@@ -69,6 +76,9 @@ export default new Vuex.Store({
     },
     getEcs: state => {
       return state.ecs;
+    },
+    getDevTypes: state => {
+      return state.devTypes;
     }
   }
 

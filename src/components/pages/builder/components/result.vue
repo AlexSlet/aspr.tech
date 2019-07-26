@@ -9,17 +9,17 @@
               <li class="device-item" v-for="(eq,i) in res.list_eq" :key="i">
                 <div>
                   <span>{{eqName[eq.eq_type]}}:</span>
-                  <template v-if="eq.eq_type === 'ecs'">
-                    <span class="ml-2">{{ecs[eq[eq.eq_type + '_apart']]}}</span>
+                  <template v-if="eq.eq_type === 5">
+                    <span class="ml-2">{{ecs[eq[type[eq.eq_type] + '_apart'] - 1]}}</span>
                   </template>
                   <template v-else>
                     <span
-                      v-if="!isExist(eq[eq.eq_type + '_current'])"
+                      v-if="!isExist(eq[type[eq.eq_type] + '_current'])"
                       class="ml-2"
-                    >{{eq[eq.eq_type + '_current']}}A</span>
-                    <span class="ml-2">{{eq[eq.eq_type + '_voltage']}}В</span>
-                    <span class="ml-2">{{manufc[eq[eq.eq_type + '_mnf']]}}</span>
-                    <span class="ml-2">{{eq[eq.eq_type + '_amount']}} шт.</span>
+                    >{{eq[type[eq.eq_type] + '_current']}}A</span>
+                    <span class="ml-2">{{eq[type[eq.eq_type] + '_voltage']}}В</span>
+                    <span class="ml-2">{{manufc[eq[type[eq.eq_type] + '_mnf']]}}</span>
+                    <span class="ml-2">{{eq[type[eq.eq_type] + '_amount']}} шт.</span>
                   </template>
                   <span class="remove-item" @click="removeItem(index,i,eq.eq_type)">✕</span>
                 </div>
@@ -77,6 +77,9 @@ export default {
     },
     ecs() {
       return this.$store.getters.getEcs;
+    },
+    type() {
+      return this.$store.getters.getDevTypes;
     },
     calcReady() {
       let length = 0;

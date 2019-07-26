@@ -9,15 +9,15 @@
           </h4>
           <ul>
             <template v-if="item.list.length <= 1">
-              <li v-for="(btn,i) in item.list" :key="i">
-                <span class="deviceName">{{btn.name}}</span>
+              <li v-for="(dev,i) in item.list" :key="i">
+                <span class="deviceName">{{dev.name}}</span>
                 <v-btn
                   fab
                   dark
                   small
                   color="info"
                   @click="$emit('addDevice', {
-                  tab: type, id: item.id, formType: item.list[0].type
+                  tab: type, id: item.id, eq_type: dev.eq_type
                 })"
                 >
                   <v-icon dark>add</v-icon>
@@ -30,11 +30,11 @@
                   class="deviceSelect"
                   :items="item.list"
                   item-text="name"
-                  item-value="type"
+                  item-value="eq_type"
                   v-model="selectVal"
                   solo
                 ></v-select>
-                <v-btn fab dark small color="info" @click="addBySelect(item,)">
+                <v-btn fab dark small color="info" @click="addBySelect(item)">
                   <v-icon dark>add</v-icon>
                 </v-btn>
               </li>
@@ -64,7 +64,7 @@ export default {
         this.$emit("addDevice", {
           tab: this.type,
           id: item.id,
-          formType: this.selectVal
+          eq_type: this.selectVal
         });
       }
     }
