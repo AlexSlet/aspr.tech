@@ -10,10 +10,13 @@
                 <div>
                   <span>{{eqName[eq.eq_type]}}:</span>
                   <template v-if="eq.eq_type === 5">
-                    <span class="ml-2">{{ecs[eq.ecs_apart - 1]}}</span>
+                    <span class="ml-2">{{ecs[eq[type[eq.eq_type] + '_apart'] - 1]}}</span>
                   </template>
                   <template v-else>
-                    <span v-if="!isExist(eq.current)" class="ml-2">{{eq.current}}A</span>
+                    <span
+                      v-if="!isExist(eq.current)"
+                      class="ml-2"
+                    >{{eq.current}}A</span>
                     <span class="ml-2">{{eq.voltage}}В</span>
                     <span class="ml-2">{{manufc[eq.mnf]}}</span>
                     <span class="ml-2">{{eq.amount}} шт.</span>
@@ -49,8 +52,8 @@ export default {
       let dublArr = this.data[tabIndex].list_eq.filter(eq => {
         return eq.eq_type == equipType;
       });
-      dubl = dublArr.length > 1 ? true : false;
-
+      dubl =  dublArr.length > 1 ? true : false;
+      
       this.$emit("removeItem", {
         tabIndex: tabIndex,
         equipIndex: equipIndex,
@@ -58,8 +61,8 @@ export default {
         dubl: dubl
       });
     },
-    calc() {
-      this.$emit("calc");
+    calc(){
+      this.$emit('calc');
     }
   },
   computed: {

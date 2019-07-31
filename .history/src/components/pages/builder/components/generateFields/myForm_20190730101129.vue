@@ -4,22 +4,22 @@
       <h3>{{eqName[form.eq_type]}}</h3>
     </v-flex>
     <template v-if="form.eq_type === 5">
-      <v-flex class="px-1" xs12 v-for="(field,i) in formFields" :key="field.name + form.tab + i">
+      <v-flex class="px-1" xs12 v-for="field in formFields" :key="field.name + form.tab">
         <span>{{field.title}}</span>
         <component
           :is="field.type"
-          :key="field.name + form.tab + i"
+          :key="field.name + form.tab"
           :data="field"
           @update-value="updateVal($event)"
         ></component>
       </v-flex>
     </template>
     <template v-else>
-      <v-flex class="px-1" xs6 v-for="(field,i) in formFields" :key="field.name + form.tab + i">
+      <v-flex class="px-1" xs6 v-for="field in formFields" :key="field.name + form.tab">
         <span>{{field.title}}</span>
         <component
           :is="field.type"
-          :key="field.name + form.tab + i"
+          :key="field.name + form.tab"
           :data="field"
           @update-value="updateVal($event)"
         ></component>

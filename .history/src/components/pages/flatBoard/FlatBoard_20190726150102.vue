@@ -40,12 +40,12 @@ export default {
               { name: "Счетчик электроэнергии", type: "pmeter", eq_type: 4 }
             ]
           },
-          // {
-          //   id: 2,
-          //   required: true,
-          //   title: "Укажите параметры корпуса шкафа",
-          //   list: [{ name: "Параметры корпуса шкафа", type: "ecs", eq_type: 5 }]
-          // }
+          {
+            id: 2,
+            required: true,
+            title: "Укажите параметры корпуса шкафа",
+            list: [{ name: "Параметры корпуса шкафа", type: "ecs", eq_type: 5 }]
+          }
         ]
       },
       {

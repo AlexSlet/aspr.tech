@@ -65,8 +65,6 @@ export default {
       this.form.tab = event.tab;
       this.form.id = event.id;
       this.axios.get(`front/asmbl${this.typeBoard}?eq_type=${event.eq_type}`).then(result => {
-        console.log(result);
-        
         this.form.formFields = [...result.data];
       });
     },
