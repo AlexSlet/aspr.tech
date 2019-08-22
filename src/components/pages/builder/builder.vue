@@ -21,19 +21,19 @@
         <my-form :notes="notes" :form="form" @saveDevice="saveDevice($event)"></my-form>
       </v-flex>
       <v-flex xs4 class="pl-4">
-        <result
+        <selected-dev
           :data="save_json"
           :requiredDevices="requiredDevices"
           @removeItem="removeItem($event)"
           @calc="calc()"
-        ></result>
+        ></selected-dev>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 <script>
 import deviceAddList from "./components/deviceAddList";
-import result from "./components/result";
+import selectedDev from "./components/selectedDev";
 import myForm from "./components/generateFields/myForm";
 export default {
   props: {
@@ -44,7 +44,7 @@ export default {
   components: {
     deviceAddList,
     myForm,
-    result
+    selectedDev
   },
   data() {
     return {
@@ -56,7 +56,7 @@ export default {
         id: "",
         tab: "",
         formFields: []
-      },
+      }
     };
   },
   methods: {
@@ -64,11 +64,11 @@ export default {
       this.form.eq_type = event.eq_type;
       this.form.tab = event.tab;
       this.form.id = event.id;
-      this.axios.get(`front/asmbl${this.typeBoard}?eq_type=${event.eq_type}`).then(result => {
-        console.log(result);
-        
-        this.form.formFields = [...result.data];
-      });
+      this.axios
+        .get(`front/asmbl${this.typeBoard}?eq_type=${event.eq_type}`)
+        .then(result => {
+          this.form.formFields = [...result.data];
+        });
     },
     setJsonFields() {
       this.tabs.forEach(tab => {
@@ -96,20 +96,29 @@ export default {
     },
     isRequired(tabType, eqType) {
       let tabByType = this.tabs.filter(item => {
+        //find tab array
         return item.type === tabType;
       });
+
+      //find only required devices array
       let reqDevs = tabByType[0].devices.filter(dev => dev.required === true);
+
       let dev = reqDevs.filter(obj => {
-        return obj.list.some(item => item.type === eqType);
+        // find device what we need in required devices
+        return obj.list.some(item => item.eq_type === eqType);
       });
+
       if (dev.length !== 0) {
+        //if device exist pust him to required array
         this.requiredDevices[tabType].push(dev[0]);
       }
     },
     removeItem(indexes) {
       if (!indexes.dubl) {
+        //if not duble required object add this object to required array
         this.isRequired(indexes.tabIndex, indexes.equipType);
       }
+      
       this.save_json[indexes.tabIndex].list_eq.splice(indexes.equipIndex, 1);
     },
     calc() {

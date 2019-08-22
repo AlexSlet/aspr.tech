@@ -33,6 +33,7 @@
 </template>
 <script>
 export default {
+  name: "selectedDev",
   props: {
     data: Object,
     requiredDevices: Object

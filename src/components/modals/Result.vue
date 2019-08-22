@@ -56,7 +56,7 @@
                   class="ma-0 ml-2"
                   color="success"
                   @click="recount()"
-                  :disabled="mnf == ''"
+                  :disabled="mnf == null"
                   dark
                 >Пересчитать</v-btn>
               </v-flex>
@@ -90,13 +90,9 @@ export default {
   data: () => ({
     loader: null,
     loading: false,
-    mnf: "",
+    mnf: null,
     incb_mnf: [
-      { name: "Schneider Electric", id: 1 },
-      { name: "DEKraft", id: 2 },
       { name: "IEK", id: 3 },
-      { name: "TDM", id: 4 },
-      { name: "КЭАЗ", id: 5 },
       { name: "ABB", id: 6 }
     ]
   }),
@@ -105,11 +101,6 @@ export default {
       this.$emit("recount", this.mnf);
     }
   },
-  // computed: {
-  //   resData() {
-  //     return this.$store.getters.getResults;
-  //   }
-  // },
   watch: {
     loader() {
       const l = this.loader;

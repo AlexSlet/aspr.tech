@@ -1,12 +1,22 @@
 <template>
-  <builder :typeBoard="forSend.type" :tabs="tabs" :notes="notes" @calc="calc($event)"></builder>
+  <v-layout row wrap fill-height>
+    <builder :typeBoard="forSend.type" :tabs="tabs" :notes="notes" @calc="calc($event)"></builder>
+    <result
+      v-if="resultOpen"
+      :resData="resData"
+      @closeModal="resultOpen = false"
+      @recount="recount($event)"
+    ></result>
+  </v-layout>
 </template>
 <script>
 import builder from "@/components/pages/builder/builder";
+import result from "@/components/modals/Result";
 export default {
   name: "FlatBoard",
   components: {
-    builder
+    builder,
+    result
   },
   data: () => ({
     forSend: {
@@ -14,6 +24,7 @@ export default {
       name: "noname"
     },
     resData: {},
+    resultOpen: false,
     id_board: -1,
     user_id: -1,
     tabs: [
@@ -40,12 +51,12 @@ export default {
               { name: "Счетчик электроэнергии", type: "pmeter", eq_type: 4 }
             ]
           },
-          // {
-          //   id: 2,
-          //   required: true,
-          //   title: "Укажите параметры корпуса шкафа",
-          //   list: [{ name: "Параметры корпуса шкафа", type: "ecs", eq_type: 5 }]
-          // }
+          {
+            id: 2,
+            required: true,
+            title: "Укажите параметры корпуса шкафа",
+            list: [{ name: "Параметры корпуса шкафа", type: "ecs", eq_type: 5 }]
+          }
         ]
       },
       {
@@ -79,13 +90,17 @@ export default {
         "Для квартирных шкафов используются устройства с характеристикой расцепителя С",
         "Для квартирных шкафов используются устройства с дифференциальным током утечки 30 мА"
       ],
-      "4": ["Для квартирных шкафов используются счетчики с номинальным током до 5-60 A"]
+      "4": [
+        "Для квартирных шкафов используются счетчики с номинальным током до 5-60 A"
+      ]
     }
   }),
   methods: {
     calc(event) {
       this.forSend = { ...this.forSend, ...event };
-
+      this.sendData();
+    },
+    sendData() {
       return this.axios
         .post(
           "math/apartsw",
@@ -101,8 +116,24 @@ export default {
           }
         )
         .then(res => {
-          console.log(res);
+          this.id_board = res.data.id;
+          this.resData = { ...res.data };
+          this.resultOpen = true;
         });
+    },
+    recount(mnf) {
+      for (let key in this.forSend) {
+        if (typeof this.forSend[key] == "object") {
+          let item = this.forSend[key];
+
+          item.list_eq.forEach(elem => {
+            if (elem.eq_type !== 4) {
+              elem.mnf = mnf;
+            }
+          });
+        }
+      }
+      this.sendData();
     }
   },
   computed: {},
