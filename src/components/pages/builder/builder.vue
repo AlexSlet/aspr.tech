@@ -22,10 +22,11 @@
       </v-flex>
       <v-flex xs4 class="pl-4">
         <selected-dev
-          :data="save_json"
-          :requiredDevices="requiredDevices"
+          :data.sync="save_json"
+          :requiredDevices.sync="requiredDevices"
           @removeItem="removeItem($event)"
           @calc="calc()"
+          @save="saveBoard($event)"
         ></selected-dev>
       </v-flex>
     </v-layout>
@@ -35,6 +36,7 @@
 import deviceAddList from "./components/deviceAddList";
 import selectedDev from "./components/selectedDev";
 import myForm from "./components/generateFields/myForm";
+import { log } from 'util';
 export default {
   props: {
     tabs: Array,
@@ -118,11 +120,19 @@ export default {
         //if not duble required object add this object to required array
         this.isRequired(indexes.tabIndex, indexes.equipType);
       }
-      
+
       this.save_json[indexes.tabIndex].list_eq.splice(indexes.equipIndex, 1);
     },
     calc() {
       this.$emit("calc", this.save_json);
+    },
+    saveBoard(board) {
+      
+      this.$emit("save", {
+        save_json: this.save_json,
+        name_board: board.name,
+        id: board.id
+      });
     }
   },
   created() {

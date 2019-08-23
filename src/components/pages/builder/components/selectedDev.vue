@@ -1,6 +1,9 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12>
+      <v-text-field v-show="calcReady" name="name" label="Имя шкафа" v-model="nameBoard"></v-text-field>
+    </v-flex>
+    <v-flex xs12>
       <ul>
         <li v-for="(res,index) in data" :key="index">
           <template v-if="res.list_eq.length > 0">
@@ -27,7 +30,14 @@
       </ul>
     </v-flex>
     <v-flex v-show="calcReady" xs12 class="mt-4">
-      <v-btn block color="success" @click="calc()">Рассчитать</v-btn>
+      <v-layout row wrap>
+        <v-flex xs6 class="px-1">
+          <v-btn block color="success" @click="calc()">Рассчитать</v-btn>
+        </v-flex>
+        <v-flex xs6 class="px-1">
+          <v-btn block color="info" dark @click="save()">Сохранить</v-btn>
+        </v-flex>
+      </v-layout>
     </v-flex>
   </v-layout>
 </template>
@@ -39,7 +49,9 @@ export default {
     requiredDevices: Object
   },
   data() {
-    return {};
+    return {
+      nameBoard: ""
+    };
   },
   methods: {
     isExist(elem) {
@@ -61,6 +73,18 @@ export default {
     },
     calc() {
       this.$emit("calc");
+    },
+    save() {
+      this.$emit("save", {
+        name: this.nameBoard,
+        id: this.getForEdit.id || -1
+      });
+    },
+    setForEdit() {
+      this.data.insw.list_eq = [...this.getForEdit.insw.list_eq];
+      this.data.outsw.list_eq = [...this.getForEdit.outsw.list_eq];
+      this.requiredDevices.insw = [];
+      this.requiredDevices.outsw = [];
     }
   },
   computed: {
@@ -85,6 +109,18 @@ export default {
         length += this.requiredDevices[key].length;
       }
       return length === 0;
+    },
+    getForEdit() {
+      return this.$store.getters.getForEdit;
+    },
+    isEdit(){
+      return Object.keys(this.getForEdit).length > 0;
+    }
+  },
+  created() {
+    if (this.isEdit) {
+      this.setForEdit();
+      this.nameBoard = this.getForEdit.name;
     }
   }
 };

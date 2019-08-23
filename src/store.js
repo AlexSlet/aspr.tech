@@ -54,6 +54,9 @@ export default new Vuex.Store({
       state.user = {};
       sessionStorage.removeItem('user');
     },
+    setEdited(state, board) {
+      state.forEdit = { ...board };
+    },
     clearEdited(state) {
       state.forEdit = {}
     }
@@ -79,6 +82,9 @@ export default new Vuex.Store({
     },
     getDevTypes: state => {
       return state.devTypes;
+    },
+    getForEdit: state => {
+      return state.forEdit;
     }
   }
 

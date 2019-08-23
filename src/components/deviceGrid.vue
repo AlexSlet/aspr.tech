@@ -12,7 +12,7 @@
           </div>
         </v-card-title>
         <v-card-actions>
-          <v-btn color="info" class="commonBtn" to="/flatboard">Рассчитать</v-btn>
+          <v-btn color="info" class="commonBtn" @click="clearEdit('/flatboard')">Рассчитать</v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -23,7 +23,7 @@
           <h3 class="headline mb-0" style="width: 100%;">Типовое ВРУ</h3>
         </v-card-title>
         <v-card-actions>
-          <v-btn dark color="info" class="commonBtn" to="/vru">Рассчитать</v-btn>
+          <v-btn dark color="info" class="commonBtn" @click="clearEdit('/vru')">Рассчитать</v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -36,12 +36,19 @@
           </div>
         </v-card-title>
         <v-card-actions>
-          <v-btn color="info" class="commonBtn" to="/switchboard">Рассчитать</v-btn>
+          <v-btn color="info" class="commonBtn" @click="clearEdit('/switchboard')">Рассчитать</v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>
   </v-layout>
 </template>
 <script>
-export default {};
+export default {
+  methods: {
+    clearEdit(url) {
+      this.$store.commit("clearEdited");
+      this.$router.push(url);
+    }
+  }
+};
 </script>

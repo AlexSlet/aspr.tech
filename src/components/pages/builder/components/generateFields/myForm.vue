@@ -63,14 +63,16 @@ export default {
       this.$set(this.formData, event.name, event.value);
     },
     saveDevice() {
-      this.$emit("saveDevice", {
-        name: this.form.tab,
-        id: this.form.id,
-        equipment: this.formData
-      });
-      this.formData = {
-        eq_type: null
-      };
+      if (this.form.formFields.length > 0) {
+        this.$emit("saveDevice", {
+          name: this.form.tab,
+          id: this.form.id,
+          equipment: this.formData
+        });
+        this.formData = {
+          eq_type: null
+        };
+      }
     }
   },
   computed: {
@@ -97,7 +99,8 @@ export default {
 .fade-leave-active {
   transition: opacity 1s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

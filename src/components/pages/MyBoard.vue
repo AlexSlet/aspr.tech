@@ -15,25 +15,16 @@
           </v-flex>
         </v-layout>
         <v-layout v-if="user">
-          <v-flex xs6>
+          <v-flex xs5>
             <h1>Мои шкафы</h1>
             <p>Выбирете шкаф для редактирования, просмотра и управления</p>
           </v-flex>
-          <v-flex xs6>
+          <v-flex xs7>
             <v-layout>
-              <v-flex xs7>
-                <v-text-field
-                  hide-details
-                  label="Найти шкаф"
-                  v-model="search"
-                  @input="searchBoard()"
-                  prepend-icon="search"
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs4 d-flex align-end>
+              <v-flex class="px-1" xs3 d-flex align-end>
                 <v-menu offset-y>
                   <template v-slot:activator="{ on }">
-                    <v-btn class="ma-0" round outline color="info" v-on="on">
+                    <v-btn block class="ma-0" round outline color="info" v-on="on">
                       <v-icon>add</v-icon>Создать шкаф
                     </v-btn>
                   </template>
@@ -47,6 +38,25 @@
                     </v-list-tile>
                   </v-list>
                 </v-menu>
+              </v-flex>
+              <v-flex class="px-1" xs3 d-flex align-end>
+                <v-btn
+                  class="ma-0"
+                  block
+                  round
+                  outline
+                  color="success"
+                  @click="openTKP(boards)"
+                >Скачать ТКП</v-btn>
+              </v-flex>
+              <v-flex xs6>
+                <v-text-field
+                  hide-details
+                  label="Найти шкаф"
+                  v-model="search"
+                  @input="searchBoard()"
+                  prepend-icon="search"
+                ></v-text-field>
               </v-flex>
             </v-layout>
           </v-flex>
@@ -74,6 +84,9 @@
                           <v-list-tile @click="downloadSpec(item)">
                             <v-list-tile-title>Скачать спецификацию</v-list-tile-title>
                           </v-list-tile>
+                          <v-list-tile @click="openTKP([{...item}])">
+                            <v-list-tile-title>Скачать ТКП</v-list-tile-title>
+                          </v-list-tile>
                           <v-list-tile @click="deleteBoard(item.id)">
                             <v-list-tile-title>Удалить</v-list-tile-title>
                           </v-list-tile>
@@ -96,15 +109,28 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <DownloadTKP
+      v-if="tkpArray.length > 0"
+      :dialog.sync="tkpDialog"
+      :boards="tkpArray"
+      @close="tkpDialog = false"
+      @download-tkp="downloadTKP($event)"
+    ></DownloadTKP>
   </div>
 </template>
 
 <script>
+import DownloadTKP from "@/components/modals/DownloadTKP";
 
 export default {
   name: "MyBoards",
+  components: {
+    DownloadTKP
+  },
   data: () => ({
     search: "",
+    tkpDialog: false,
+    tkpArray: [],
     searchArr: [],
     addBoards: [
       { name: "ВРУ", link: "/vru" },
@@ -120,6 +146,7 @@ export default {
   }),
   methods: {
     addBoard(link) {
+      this.$store.commit("clearEdited");
       this.$router.push(link);
     },
     getMyBoards() {
@@ -172,10 +199,22 @@ export default {
         )
         .then(res => {
           window.open(
-            "http://aspr.tech:8080/math/loadfiles?id=" + res.data.id,
+            "http://aspr.tech:8080/download/specification?id=" + res.data,
             "new_window"
           );
         });
+    },
+    openTKP(items) {
+      this.tkpArray = [...items];
+      this.tkpDialog = true;
+    },
+    downloadTKP(event) {
+      this.axios.post("create/offer", event).then(res => {
+        window.open(
+          "http://aspr.tech:8080/download/offer?id=" + res.data,
+          "new_window"
+        );
+      });
     },
     checkUrl(type) {
       let url;

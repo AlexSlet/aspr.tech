@@ -1,6 +1,12 @@
 <template>
   <v-layout row wrap fill-height>
-    <builder :typeBoard="forSend.type" :tabs="tabs" :notes="notes" @calc="calc($event)"></builder>
+    <builder
+      :typeBoard="forSend.type"
+      :tabs="tabs"
+      :notes="notes"
+      @calc="calc($event)"
+      @save="saveOrUpdate($event)"
+    ></builder>
     <result
       v-if="resultOpen"
       :resData="resData"
@@ -26,7 +32,6 @@ export default {
     resData: {},
     resultOpen: false,
     id_board: -1,
-    user_id: -1,
     tabs: [
       {
         id: 0,
@@ -96,17 +101,44 @@ export default {
     }
   }),
   methods: {
-    calc(event) {
-      this.forSend = { ...this.forSend, ...event };
-      this.sendData();
+    calc(board) {
+      this.forSend = { ...this.forSend, ...board };
+      this.calcData();
     },
-    sendData() {
+    saveOrUpdate(board) {
+      this.forSend.name = board.name_board;
+
+      let url;
+      if (board.id == -1) {
+        url = "users/saveasmbl";
+      } else {
+        url = "users/updasmbl";
+      }
+      return this.axios
+        .post(
+          url,
+          {
+            id_user: this.user.id || -1,
+            id: board.id,
+            save_json: { ...this.forSend, ...board.save_json }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
+          }
+        )
+        .then(() => {
+          this.$router.push("/myboard");
+        });
+    },
+    calcData() {
       return this.axios
         .post(
           "math/apartsw",
           {
             id: this.id_board,
-            id_user: this.user_id,
+            id_user: this.user.id || -1,
             save_json: { ...this.forSend }
           },
           {
@@ -133,10 +165,14 @@ export default {
           });
         }
       }
-      this.sendData();
+      this.calcData();
     }
   },
-  computed: {},
+  computed: {
+    user() {
+      return this.$store.getters.getUser;
+    }
+  },
   created() {}
 };
 </script>
