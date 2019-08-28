@@ -1,5 +1,11 @@
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/asprtech.gitlab.io/'
+    ? '/'
     : '/'
 }
+
+// module.exports = {
+//   publicPath: process.env.NODE_ENV === 'production'
+//     ? '/asprtech.gitlab.io/'
+//     : '/'
+// }

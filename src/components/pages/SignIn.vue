@@ -39,7 +39,7 @@
           </v-card-title>
 
           <v-card-actions>
-            <v-btn flat color="info" @click="signIn()" :disabled="ckeckFields">Отправить</v-btn>
+            <v-btn flat color="info" @click="signIn()" :disabled="ckeckFields">Регистрация</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>

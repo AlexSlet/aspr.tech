@@ -57,18 +57,21 @@ export default {
         eq_type: "",
         id: "",
         tab: "",
+        renderKey: 0,
         formFields: []
       }
     };
   },
   methods: {
     addDevice(event) {
+
       this.form.eq_type = event.eq_type;
       this.form.tab = event.tab;
       this.form.id = event.id;
       this.axios
         .get(`front/asmbl${this.typeBoard}?eq_type=${event.eq_type}`)
         .then(result => {
+          this.form.renderKey++;
           this.form.formFields = [...result.data];
         });
     },

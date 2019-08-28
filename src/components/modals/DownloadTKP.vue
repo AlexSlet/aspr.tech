@@ -10,7 +10,7 @@
 
         <h3 class="mb-2" style="text-align: left;">Укажите количество:</h3>
         <ul>
-          <li v-for="(board,i) in boards" :key="board.id">
+          <li v-for="(board,i) in boardsForSend" :key="board.id">
             <v-layout row wrap>
               <v-flex xs4 d-flex align-center>
                 <span>{{board.name}}:</span>
@@ -23,6 +23,9 @@
                   v-model.number="boardsForSend[i].amount"
                 ></v-text-field>
               </v-flex>
+              <v-flex xs2>
+                <v-btn flat small icon color="error" @click="remove(i)">✕</v-btn>
+              </v-flex>
             </v-layout>
           </li>
         </ul>
@@ -32,7 +35,7 @@
 
       <v-card-actions>
         <div class="flex-grow-1"></div>
-        <v-btn color="primary" text @click="download()">Скачать</v-btn>
+        <v-btn color="primary" :disabled="!boardsEmpty" text @click="download()">Скачать</v-btn>
         <v-btn color="warning" text @click="close()">Закрыть</v-btn>
       </v-card-actions>
     </v-card>
@@ -68,12 +71,23 @@ export default {
       this.$emit("close");
     },
     fillBoards() {
+      this.boardsForSend = [];
+
       this.boards.forEach(el => {
         this.boardsForSend.push({
           idorder: el.id,
-          amount: 1
+          amount: 1,
+          name: el.name
         });
       });
+    },
+    remove(i){
+      this.boardsForSend.splice(i, 1);
+    }
+  },
+  computed: {
+    boardsEmpty(){
+      return this.boardsForSend.length > 0;
     }
   },
   created() {

@@ -25,7 +25,8 @@
               :disabled="loading"
               color="blue-grey"
               class="white--text ma-0"
-              :href="'http://aspr.tech:8080/math/loadfiles?id=' + resData.id"
+              @click="downloadSpec()"
+              :href="'http://aspr.tech:8080/download/specification?id=' + resData.id"
               target="blank"
             >
               Загрузить файл
@@ -80,25 +81,48 @@ export default {
   filters: {
     priceTransform: function(value) {
       if (!value) return "";
-      
-      return value.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' });
+
+      return value.toLocaleString("ru-RU", {
+        style: "currency",
+        currency: "RUB"
+      });
     }
   },
   props: {
-    resData: Object
+    resData: Object,
+    item: Object
   },
   data: () => ({
     loader: null,
     loading: false,
     mnf: null,
-    incb_mnf: [
-      { name: "IEK", id: 3 },
-      { name: "ABB", id: 6 }
-    ]
+    incb_mnf: [{ name: "IEK", id: 3 }, { name: "ABB", id: 6 }]
   }),
   methods: {
     recount() {
       this.$emit("recount", this.mnf);
+    },
+    downloadSpec() {
+      this.axios
+        .post(
+          "create/specification",
+          {
+            id: -1,
+            id_user: -1,
+            save_json: { ...this.item }
+          },
+          {
+            headers: {
+              "Content-Type": "text/plain"
+            }
+          }
+        )
+        .then(res => {
+          window.open(
+            "http://aspr.tech:8080/download/specification?id=" + res.data,
+            "new_window"
+          );
+        });
     }
   },
   watch: {

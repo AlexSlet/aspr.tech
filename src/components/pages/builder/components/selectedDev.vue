@@ -76,7 +76,7 @@ export default {
     },
     save() {
       this.$emit("save", {
-        name: this.nameBoard,
+        name: this.nameBoard || 'Мой шкаф',
         id: this.getForEdit.id || -1
       });
     },

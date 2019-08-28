@@ -9,7 +9,7 @@
                 <h3>Логин</h3>
               </v-flex>
               <v-flex xs12>
-                <v-text-field label="Логин" v-model="user.username" :rules="[rules.required]"></v-text-field>
+                <v-text-field label="Логин" v-model="user.username" :rules="[rules.required]" @keyup.enter="logIn()"></v-text-field>
                 <v-text-field
                   label="Пароль"
                   v-model="user.password"
@@ -19,6 +19,7 @@
                   hint="At least 6 characters"
                   counter
                   @click:append="show1 = !show1"
+                  @keyup.enter="logIn()"
                 ></v-text-field>
               </v-flex>
             </v-layout>

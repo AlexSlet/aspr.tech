@@ -110,7 +110,7 @@
       </v-layout>
     </v-container>
     <DownloadTKP
-      v-if="tkpArray.length > 0"
+      v-if="tkpDialog"
       :dialog.sync="tkpDialog"
       :boards="tkpArray"
       @close="tkpDialog = false"
@@ -133,9 +133,9 @@ export default {
     tkpArray: [],
     searchArr: [],
     addBoards: [
-      { name: "ВРУ", link: "/vru" },
-      { name: "Квартирные электрошкафы", link: "/flatboard" },
-      { name: "Распределительное электрооборудование", link: "/switchboard" }
+      // { name: "ВРУ", link: "/vru" },
+      { name: "Электрошкаф для жилых помещений", link: "/flatboard" },
+      // { name: "Главный распределительный щит", link: "/switchboard" }
     ],
     boards: [],
     types: [
@@ -182,10 +182,9 @@ export default {
       });
     },
     downloadSpec(item) {
-      let url = this.checkUrl(item.type);
       this.axios
         .post(
-          url,
+          "create/specification",
           {
             id: item.id,
             id_user: -1,
@@ -205,7 +204,8 @@ export default {
         });
     },
     openTKP(items) {
-      this.tkpArray = [...items];
+
+      this.tkpArray = items;
       this.tkpDialog = true;
     },
     downloadTKP(event) {

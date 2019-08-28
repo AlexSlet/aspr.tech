@@ -10,6 +10,7 @@
     <result
       v-if="resultOpen"
       :resData="resData"
+      :item="forSend"
       @closeModal="resultOpen = false"
       @recount="recount($event)"
     ></result>
@@ -66,7 +67,7 @@ export default {
       },
       {
         id: 1,
-        name: "Отходящие автоматы",
+        name: "Отходящие устройства",
         type: "outsw",
         devices: [
           {

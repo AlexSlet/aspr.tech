@@ -8,7 +8,7 @@
         <span>{{field.title}}</span>
         <component
           :is="field.type"
-          :key="field.name + form.tab + i"
+          :key="field.name + form.tab + i + form.renderKey"
           :data="field"
           @update-value="updateVal($event)"
         ></component>
@@ -19,7 +19,7 @@
         <span>{{field.title}}</span>
         <component
           :is="field.type"
-          :key="field.name + form.tab + i"
+          :key="field.name + form.tab + i + form.renderKey"
           :data="field"
           @update-value="updateVal($event)"
         ></component>
