@@ -43,7 +43,6 @@
           <v-divider></v-divider>
         </li>
       </ul>
-      <small>Поля с * обязательные!</small>
     </v-flex>
   </v-layout>
 </template>

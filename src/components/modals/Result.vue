@@ -26,7 +26,6 @@
               color="blue-grey"
               class="white--text ma-0"
               @click="downloadSpec()"
-              :href="'http://aspr.tech:8080/download/specification?id=' + resData.id"
               target="blank"
             >
               Загрузить файл
@@ -77,6 +76,7 @@
   </div>
 </template>
 <script>
+import { setTimeout } from "timers";
 export default {
   filters: {
     priceTransform: function(value) {

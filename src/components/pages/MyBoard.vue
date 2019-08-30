@@ -133,7 +133,7 @@ export default {
     tkpArray: [],
     searchArr: [],
     addBoards: [
-      // { name: "ВРУ", link: "/vru" },
+      { name: "ВРУ", link: "/vru" },
       { name: "Электрошкаф для жилых помещений", link: "/flatboard" },
       // { name: "Главный распределительный щит", link: "/switchboard" }
     ],

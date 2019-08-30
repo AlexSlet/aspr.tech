@@ -9,20 +9,39 @@
           <template v-if="res.list_eq.length > 0">
             <h4 class="mb-1">{{tabName[index]}}:</h4>
             <ul>
-              <li class="device-item" v-for="(eq,i) in res.list_eq" :key="i">
-                <div>
-                  <span>{{eqName[eq.eq_type]}}:</span>
-                  <template v-if="eq.eq_type === 5">
-                    <span class="ml-2">{{ecs[eq.ecs_apart - 1]}}</span>
-                  </template>
-                  <template v-else>
-                    <span v-if="!isExist(eq.current)" class="ml-2">{{eq.current}}A</span>
-                    <span class="ml-2">{{eq.voltage}}В</span>
-                    <span class="ml-2">{{manufc[eq.mnf]}}</span>
-                    <span class="ml-2">{{eq.amount}} шт.</span>
-                  </template>
-                  <span class="remove-item" @click="removeItem(index,i,eq.eq_type)">✕</span>
-                </div>
+              <li class="device-item" v-for="(device,i) in res.list_eq" :key="i">
+                <v-layout row wrap>
+                  <v-flex xs11>
+                    <v-layout row wrap fill-height>
+                      <v-flex xs4>
+                        <span>{{eqName[device.eq_type]}}:</span>
+                      </v-flex>
+                      <v-flex xs8 d-flex style="flex-wrap: wrap;" justify-space-between>
+                        <template v-for="(feature, i) in device">
+                          <span
+                            v-if="i !== 'eq_type'"
+                            :key="i"
+                          >{{feature.name || feature }}{{units(i, feature)}}</span>
+                        </template>
+                      </v-flex>
+                    </v-layout>
+                  </v-flex>
+                  <!-- <v-flex xs1>
+                    <v-btn small icon color="info" flat @click="editItem(index,i,device.eq_type)"><i class="material-icons">create</i></v-btn>
+                  </v-flex>-->
+                  <v-flex xs1>
+                    <v-btn
+                      class="ma-0"
+                      small
+                      icon
+                      color="error"
+                      flat
+                      @click="removeItem(index,i,device.eq_type)"
+                    >
+                      <i class="material-icons">remove</i>
+                    </v-btn>
+                  </v-flex>
+                </v-layout>
               </li>
             </ul>
           </template>
@@ -55,12 +74,12 @@ export default {
   },
   methods: {
     isExist(elem) {
-      return elem === undefined ? true : false;
+      //return elem === undefined ? true : false;
     },
     removeItem(tabIndex, equipIndex, equipType) {
       let dubl = false;
-      let dublArr = this.data[tabIndex].list_eq.filter(eq => {
-        return eq.eq_type == equipType;
+      let dublArr = this.data[tabIndex].list_eq.filter(device => {
+        return device.eq_type == equipType;
       });
       dubl = dublArr.length > 1 ? true : false;
 
@@ -71,12 +90,16 @@ export default {
         dubl: dubl
       });
     },
+
+    editItem(tabIndex, equipIndex, equipType) {
+      this.removeItem(tabIndex, equipIndex, equipType);
+    },
     calc() {
       this.$emit("calc");
     },
     save() {
       this.$emit("save", {
-        name: this.nameBoard || 'Мой шкаф',
+        name: this.nameBoard || "Мой шкаф",
         id: this.getForEdit.id || -1
       });
     },
@@ -85,6 +108,27 @@ export default {
       this.data.outsw.list_eq = [...this.getForEdit.outsw.list_eq];
       this.requiredDevices.insw = [];
       this.requiredDevices.outsw = [];
+    },
+    units(fieldName, value) {
+
+      let unit = "";
+      if (typeof value === "number") {
+
+        switch (fieldName) {
+          case "current":
+            unit = "A";
+            break;
+          case "voltage":
+            unit = "В";
+            break;
+          case "amount":
+            unit = "Шт.";
+            break;
+        }
+        
+      }
+
+      return unit;
     }
   },
   computed: {
@@ -103,17 +147,20 @@ export default {
     type() {
       return this.$store.getters.getDevTypes;
     },
+    counterType() {
+      return this.$store.getters.getCounterType;
+    },
     calcReady() {
       let length = 0;
-      for (let key in this.requiredDevices) {
-        length += this.requiredDevices[key].length;
+      for (let key in this.data) {
+        length += this.data[key].list_eq.length;
       }
-      return length === 0;
+      return length !== 0;
     },
     getForEdit() {
       return this.$store.getters.getForEdit;
     },
-    isEdit(){
+    isEdit() {
       return Object.keys(this.getForEdit).length > 0;
     }
   },

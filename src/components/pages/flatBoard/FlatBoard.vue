@@ -41,7 +41,7 @@ export default {
         devices: [
           {
             id: 0,
-            required: true,
+            required: false,
             title: "Добавить вводные устройства",
             list: [
               { name: "Автоматический выключатель", type: "cb", eq_type: 1 },
@@ -59,7 +59,7 @@ export default {
           },
           {
             id: 2,
-            required: true,
+            required: false,
             title: "Укажите параметры корпуса шкафа",
             list: [{ name: "Параметры корпуса шкафа", type: "ecs", eq_type: 5 }]
           }
@@ -72,7 +72,7 @@ export default {
         devices: [
           {
             id: 0,
-            required: true,
+            required: false,
             title: "Добавить отходящие устройства",
             list: [
               { name: "Автоматический выключатель", type: "cb", eq_type: 1 },
