@@ -103,8 +103,42 @@ export default {
   }),
   methods: {
     calc(board) {
-      this.forSend = { ...this.forSend, ...board };
+      let obj = this.transformSaveJSON(board);
+
+      this.forSend = { ...this.forSend, ...obj };
       this.calcData();
+    },
+    transformSaveJSON(object) {
+      //SOME TIMES REWRITE THIS SHIT
+      const d = Object.keys(object);
+      const obj = {};
+
+      d.forEach(key => {
+        const value = object[key];
+
+        if (typeof value === "object") {
+          obj[key] = {
+            list_eq: value.list_eq.map(item => {
+              const o = {};
+              const k = Object.keys(item);
+
+              k.forEach(h => {
+                if (typeof item[h] === "object") {
+                  o[h] = item[h].value;
+                } else {
+                  o[h] = item[h];
+                }
+              });
+
+              return o;
+            })
+          };
+        } else {
+          obj[key] = object[key];
+        }
+      });
+      return obj;
+      //SOME TIMES REWRITE THIS SHIT
     },
     saveOrUpdate(board) {
       this.forSend.name = board.name_board;
@@ -115,13 +149,16 @@ export default {
       } else {
         url = "users/updasmbl";
       }
+
+      let obj = this.transformSaveJSON(board.save_json);
+
       return this.axios
         .post(
           url,
           {
             id_user: this.user.id || -1,
             id: board.id,
-            save_json: { ...this.forSend, ...board.save_json }
+            save_json: { ...this.forSend, ...obj }
           },
           {
             headers: {
